@@ -16,8 +16,8 @@ Each thumbnail image view may have its own transform, the focus and defocus anim
 ## Video
 A video player is shown if the media is a video (supported extension are "mp4" and "mov"). The video player comes with its own controls made of a play/pause button, a slider and time labels. Scrubbing is also available thanks to [ASBPlayerScrubbing](https://github.com/autresphere/ASBPlayerScrubbing).
 
-![](https://github.com/autresphere/ASMediaFocusManager/raw/master/Screenshots/videoPlayer.jpg) 
-![](https://github.com/autresphere/ASMediaFocusManager/raw/master/Screenshots/videoFocusOnVideo.gif)
+![](https://github.com/autresphere/AKMediaViewer/raw/master/Screenshots/videoPlayer.jpg) 
+![](https://github.com/autresphere/AKMediaViewer/raw/master/Screenshots/videoFocusOnVideo.gif)
 
 ## Orientation
 The focused view is automatically adapted to the screen orientation even if your main view controller is portrait only.
@@ -29,7 +29,7 @@ For now, only `UIViewContentMode.ScaleAspectFit` and `UIViewContentMode.ScaleAsp
 
 In case of `UIViewContentMode.ScaleAspectFill`, the view is expanded in order to show the image in full.
 
-![](https://github.com/autresphere/ASMediaFocusManager/raw/master/Screenshots/videoAspectFill.gif) 
+![](https://github.com/autresphere/AKMediaViewer/raw/master/Screenshots/videoAspectFill.gif) 
 
 If you want other content modes to be supported, please drop me a line. You can even try a pull request, which would be much appreciated!
 
