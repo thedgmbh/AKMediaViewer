@@ -1,0 +1,21 @@
+# Mac OSX
+.DS_Store
+
+# XCode
+xcuserdata
+build
+*.xcuserstate
+*.xcbkptlist
+*.xcworkspace
+*.bak
+
+# Test Report
+test-reports
+
+# CocoaPods
+Pods
+Podfile.lock
+
+# Git
+*.orig
+

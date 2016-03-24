@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="AKMediaViewer" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="BUH-aH-R87">
+                                <rect key="frame" x="151" y="70" width="298" height="61"/>
+                                <string key="text">1. Tap any media to bring it in focus
+2. Change your device orientation
+3. Tap "Done" to send back the media</string>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" directionalLockEnabled="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="140" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Z62-m1-NOo">
+                                <rect key="frame" x="0.0" y="155" width="600" height="445"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MediaCell" id="BJx-pA-w9v" customClass="MediaCell" customModule="AKMediaViewer" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="22" width="600" height="140"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="BJx-pA-w9v" id="ce0-yu-I5X">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="140"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="AZx-gS-YfW">
+                                                    <rect key="frame" x="175" y="0.0" width="249" height="140"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="249" id="9uB-FF-TdJ"/>
+                                                    </constraints>
+                                                </imageView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="AZx-gS-YfW" firstAttribute="top" secondItem="ce0-yu-I5X" secondAttribute="topMargin" constant="-8" id="75k-sL-BrZ"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="AZx-gS-YfW" secondAttribute="bottom" constant="-8" id="Odb-ez-ekq"/>
+                                                <constraint firstItem="AZx-gS-YfW" firstAttribute="centerX" secondItem="ce0-yu-I5X" secondAttribute="centerX" id="ebN-ri-hdj"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="thumbnailView" destination="AZx-gS-YfW" id="bgC-LK-waE"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="bkU-8Z-mVk"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="HPj-zN-CGk"/>
+                                </connections>
+                            </tableView>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="AKMediaViewer" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="c7C-YN-o9r">
+                                <rect key="frame" x="16" y="28" width="568" height="30"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="25"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Z62-m1-NOo" secondAttribute="bottom" id="8VL-dd-QH5"/>
+                            <constraint firstItem="c7C-YN-o9r" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="16" id="9bR-y4-u8g"/>
+                            <constraint firstAttribute="trailing" secondItem="c7C-YN-o9r" secondAttribute="trailing" constant="16" id="FQg-HK-7eJ"/>
+                            <constraint firstItem="BUH-aH-R87" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="HM7-nv-nuO"/>
+                            <constraint firstItem="BUH-aH-R87" firstAttribute="top" secondItem="c7C-YN-o9r" secondAttribute="bottom" constant="12" id="f0C-jL-cx8"/>
+                            <constraint firstAttribute="trailing" secondItem="Z62-m1-NOo" secondAttribute="trailing" id="hht-4r-746"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Z62-m1-NOo" secondAttribute="trailing" constant="113" id="j2g-B2-PyJ"/>
+                            <constraint firstItem="c7C-YN-o9r" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="kEo-nw-w3j"/>
+                            <constraint firstItem="Z62-m1-NOo" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="kgF-Ev-cYV"/>
+                            <constraint firstItem="c7C-YN-o9r" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" id="maQ-Di-tt9"/>
+                            <constraint firstItem="Z62-m1-NOo" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="127" id="xZY-5j-6Aj"/>
+                            <constraint firstItem="Z62-m1-NOo" firstAttribute="top" secondItem="BUH-aH-R87" secondAttribute="bottom" constant="24" id="zZF-a9-2Wc"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="j2g-B2-PyJ"/>
+                                <exclude reference="xZY-5j-6Aj"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="Z62-m1-NOo" id="j07-7T-5KE"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="345" y="320"/>
+        </scene>
+    </scenes>
+</document>
