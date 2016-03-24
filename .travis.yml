@@ -1,6 +1,6 @@
 # reference: http://www.objc.io/issue-6/travis-ci.html
 
-language: objective-c
+language: swift
 podfile: AKMediaViewerExample/Podfile
 
 script:
