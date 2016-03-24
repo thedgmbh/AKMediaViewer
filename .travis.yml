@@ -3,8 +3,5 @@
 language: swift
 podfile: AKMediaViewerExample/Podfile
 
-before_install:
-  - gem install cocoapods -v '0.39.0'
-
 script:
 - xcodebuild -workspace AKMediaViewerExample/AKMediaViewer.xcworkspace -scheme AKMediaViewer -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO
