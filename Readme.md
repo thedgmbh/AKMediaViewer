@@ -4,7 +4,7 @@ AKMediaViewer
 Beautiful iOS library to animate your image and video thumbnails to fullscreen. Written in Swift
 
 [![Build Status](https://travis-ci.org/dogo/AKMediaViewer.svg?branch=master)](https://travis-ci.org/dogo/AKMediaViewer)
-[![Cocoapods](http://img.shields.io/cocoapods/v/AKMediaViewer.svg)](http://cocoapods.org/?q=AKMediaViewer-Objective-C)
+[![Cocoapods](http://img.shields.io/cocoapods/v/AKMediaViewer.svg)](http://cocoapods.org/?q=AKMediaViewer)
 [![Pod License](http://img.shields.io/cocoapods/l/AKMediaViewer.svg)](https://github.com/dogo/AKMediaViewer/blob/master/LICENSE)
 
 AKMediaViewer gives the ability to focus on any thumbnail image or video by a simple tap. The thumbnail image is automatically animated to a focused fullscreen image view or video player. Another tap on the 'Done' button shrinks (or defocuses) the image back to its initial position.
@@ -16,8 +16,8 @@ Each thumbnail image view may have its own transform, the focus and defocus anim
 ## Video
 A video player is shown if the media is a video (supported extension are "mp4" and "mov"). The video player comes with its own controls made of a play/pause button, a slider and time labels. Scrubbing is also available thanks to [ASBPlayerScrubbing](https://github.com/autresphere/ASBPlayerScrubbing).
 
-![](https://github.com/autresphere/AKMediaViewer/raw/master/Screenshots/videoPlayer.jpg) 
-![](https://github.com/autresphere/AKMediaViewer/raw/master/Screenshots/videoFocusOnVideo.gif)
+![](https://github.com/dogo/AKMediaViewer/raw/master/Screenshots/videoPlayer.jpg) 
+![](https://github.com/dogo/AKMediaViewer/raw/master/Screenshots/videoFocusOnVideo.gif)
 
 ## Orientation
 The focused view is automatically adapted to the screen orientation even if your main view controller is portrait only.
@@ -29,7 +29,7 @@ For now, only `UIViewContentMode.ScaleAspectFit` and `UIViewContentMode.ScaleAsp
 
 In case of `UIViewContentMode.ScaleAspectFill`, the view is expanded in order to show the image in full.
 
-![](https://github.com/autresphere/AKMediaViewer/raw/master/Screenshots/videoAspectFill.gif) 
+![](https://github.com/dogo/AKMediaViewer/raw/master/Screenshots/videoAspectFill.gif) 
 
 If you want other content modes to be supported, please drop me a line. You can even try a pull request, which would be much appreciated!
 
