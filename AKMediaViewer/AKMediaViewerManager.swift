@@ -491,19 +491,15 @@ public class AKMediaViewerManager : NSObject, UIGestureRecognizerDelegate {
     // Start the close animation on the current focused view.
     public func endFocusing() {
         let duration: NSTimeInterval
-        let contentView: UIView?
+        let contentView: UIView
         
         if(isZooming && gestureDisabledDuringZooming) {
             return
         }
         
-        contentView = self.focusViewController!.mainImageView
-        
-        if (contentView == nil) {
-            return
-        }
-        
         focusViewController!.defocusWillStart()
+        
+        contentView = self.focusViewController!.mainImageView
         
         UIView.animateWithDuration(self.animationDuration) { () -> Void in
             self.focusViewController!.view.backgroundColor = UIColor.clearColor()
@@ -513,18 +509,18 @@ public class AKMediaViewerManager : NSObject, UIGestureRecognizerDelegate {
             self.focusViewController!.beginAppearanceTransition(false, animated: true)
         }
         
-        duration = (self.elasticAnimation ? self.animationDuration * ( 1.0 - kAnimateElasticDurationRatio) : self.animationDuration)
+        duration = (self.elasticAnimation ? self.animationDuration * (1.0 - kAnimateElasticDurationRatio) : self.animationDuration)
         
         if (self.mediaView.layer.cornerRadius > 0) {
-            animateCornerRadiusOfView(contentView!, withDuration: duration, from: 0.0, to: Float(self.mediaView.layer.cornerRadius))
+            animateCornerRadiusOfView(contentView, withDuration: duration, from: 0.0, to: Float(self.mediaView.layer.cornerRadius))
         }
         
         UIView.animateWithDuration(duration,
             animations: { () -> Void in
                 self.delegate?.mediaFocusManagerWillDisappear?(self)
                 self.focusViewController!.contentView.transform = CGAffineTransformIdentity
-                contentView!.center = contentView!.superview!.convertPoint(self.mediaView.center, fromView: self.mediaView.superview)
-                contentView!.transform = self.mediaView.transform
+                contentView.center = contentView.superview!.convertPoint(self.mediaView.center, fromView: self.mediaView.superview)
+                contentView.transform = self.mediaView.transform
                 self.updateBoundsDuringAnimationWithElasticRatio(kAnimateElasticSizeRatio)
             }, completion: { (finished: Bool) -> Void in
                 UIView.animateWithDuration(self.elasticAnimation ? self.animationDuration * (kAnimateElasticDurationRatio / 3.0) : 0.0,
@@ -592,7 +588,7 @@ public class AKMediaViewerManager : NSObject, UIGestureRecognizerDelegate {
         let offset: CGFloat
         let duration: NSTimeInterval = self.animationDuration
         
-        focusViewController?.defocusWillStart()
+        focusViewController!.defocusWillStart()
         offset = (gesture.direction == UISwipeGestureRecognizerDirection.Up ? -kSwipeOffset : kSwipeOffset)
         contentView = focusViewController!.mainImageView
         
@@ -601,7 +597,7 @@ public class AKMediaViewerManager : NSObject, UIGestureRecognizerDelegate {
         }
         
         UIView.animateWithDuration(duration / 2) {
-            self.focusViewController?.beginAppearanceTransition(false, animated: true)
+            self.focusViewController!.beginAppearanceTransition(false, animated: true)
         }
         
         UIView.animateWithDuration(0.4 * duration,
