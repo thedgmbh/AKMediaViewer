@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 let kAnimateElasticSizeRatio: CGFloat = 0.03
-let kAnimateElasticDurationRatio: CGFloat = 0.6
+let kAnimateElasticDurationRatio: Double = 0.6
 let kAnimateElasticSecondMoveSizeRatio: CGFloat = 0.5
 let kAnimateElasticThirdMoveSizeRatio: CGFloat = 0.2
 let kAnimationDuration: Double = 0.5
@@ -393,7 +393,7 @@ public class AKMediaViewerManager : NSObject, UIGestureRecognizerDelegate {
             focusViewController?.beginAppearanceTransition(true, animated: true)
         }
         
-        duration = (elasticAnimation ? animationDuration * Double(1.0 - kAnimateElasticDurationRatio) : self.animationDuration)
+        duration = (elasticAnimation ? animationDuration * (1.0 - kAnimateElasticDurationRatio) : self.animationDuration)
         
         UIView.animateWithDuration(self.animationDuration,
             animations: { () -> Void in
@@ -428,19 +428,19 @@ public class AKMediaViewerManager : NSObject, UIGestureRecognizerDelegate {
                     self.animateCornerRadiusOfView(imageView, withDuration: duration, from: Float(mediaView.layer.cornerRadius), to: 0.0)
                 }
             }, completion: { (finished: Bool) -> Void in
-                UIView.animateWithDuration(self.elasticAnimation ? self.animationDuration * Double(kAnimateElasticDurationRatio / 3.0) : 0.0,
+                UIView.animateWithDuration(self.elasticAnimation ? self.animationDuration * (kAnimateElasticDurationRatio / 3.0) : 0.0,
                     animations: { () -> Void in
                         var frame: CGRect = untransformedFinalImageFrame
                         frame = (self.elasticAnimation ? self.rectInsetsForRect(frame, withRatio:kAnimateElasticSizeRatio * kAnimateElasticSecondMoveSizeRatio) : frame)
                         imageView.frame = frame
                     }, completion: { (finished: Bool) -> Void in
-                        UIView.animateWithDuration(self.elasticAnimation ? self.animationDuration * Double(kAnimateElasticDurationRatio / 3.0) : 0.0,
+                        UIView.animateWithDuration(self.elasticAnimation ? self.animationDuration * (kAnimateElasticDurationRatio / 3.0) : 0.0,
                             animations: { () -> Void in
                                 var frame: CGRect = untransformedFinalImageFrame
                                 frame = (self.elasticAnimation ? self.rectInsetsForRect(frame, withRatio: -kAnimateElasticSizeRatio * kAnimateElasticThirdMoveSizeRatio) : frame)
                                 imageView.frame = frame
                             }, completion: { (finished: Bool) -> Void in
-                                UIView.animateWithDuration(self.elasticAnimation ? self.animationDuration * Double(kAnimateElasticDurationRatio / 3.0) : 0.0,
+                                UIView.animateWithDuration(self.elasticAnimation ? self.animationDuration * (kAnimateElasticDurationRatio / 3.0) : 0.0,
                                     animations: { () -> Void in
                                         imageView.frame = untransformedFinalImageFrame
                                     }, completion: { (finished: Bool) -> Void in
@@ -513,7 +513,7 @@ public class AKMediaViewerManager : NSObject, UIGestureRecognizerDelegate {
             self.focusViewController!.beginAppearanceTransition(false, animated: true)
         }
         
-        duration = (self.elasticAnimation ? self.animationDuration * Double( 1.0 - kAnimateElasticDurationRatio) : self.animationDuration)
+        duration = (self.elasticAnimation ? self.animationDuration * ( 1.0 - kAnimateElasticDurationRatio) : self.animationDuration)
         
         if (self.mediaView.layer.cornerRadius > 0) {
             animateCornerRadiusOfView(contentView!, withDuration: duration, from: 0.0, to: Float(self.mediaView.layer.cornerRadius))
@@ -527,15 +527,15 @@ public class AKMediaViewerManager : NSObject, UIGestureRecognizerDelegate {
                 contentView!.transform = self.mediaView.transform
                 self.updateBoundsDuringAnimationWithElasticRatio(kAnimateElasticSizeRatio)
             }, completion: { (finished: Bool) -> Void in
-                UIView.animateWithDuration(self.elasticAnimation ? self.animationDuration * Double(kAnimateElasticDurationRatio / 3.0) : 0.0,
+                UIView.animateWithDuration(self.elasticAnimation ? self.animationDuration * (kAnimateElasticDurationRatio / 3.0) : 0.0,
                     animations: { () -> Void in
                         self.updateBoundsDuringAnimationWithElasticRatio(-kAnimateElasticSizeRatio * kAnimateElasticSecondMoveSizeRatio)
                     }, completion: { (finished: Bool) -> Void in
-                        UIView.animateWithDuration(self.elasticAnimation ? self.animationDuration * Double(kAnimateElasticDurationRatio / 3.0) : 0.0,
+                        UIView.animateWithDuration(self.elasticAnimation ? self.animationDuration * (kAnimateElasticDurationRatio / 3.0) : 0.0,
                             animations: { () -> Void in
                                 self.updateBoundsDuringAnimationWithElasticRatio(kAnimateElasticSizeRatio * kAnimateElasticThirdMoveSizeRatio)
                             }, completion: { (finished: Bool) -> Void in
-                                UIView.animateWithDuration(self.elasticAnimation ? self.animationDuration * Double(kAnimateElasticDurationRatio / 3.0) : 0.0,
+                                UIView.animateWithDuration(self.elasticAnimation ? self.animationDuration * (kAnimateElasticDurationRatio / 3.0) : 0.0,
                                     animations: { () -> Void in
                                         self.updateBoundsDuringAnimationWithElasticRatio(0.0)
                                     }, completion: { (finished: Bool) -> Void in
