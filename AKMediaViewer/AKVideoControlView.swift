@@ -30,7 +30,7 @@ public class AKVideoControlView : UIView {
     
     class func videoControlView() -> AKVideoControlView {
         let objects: NSArray = NSBundle.mainBundle().loadNibNamed("AKVideoControlView", owner: nil, options: nil)
-        return objects[0] as! AKVideoControlView
+        return objects.firstObject as! AKVideoControlView
     }
     
     // MARK: - IBActions

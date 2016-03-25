@@ -219,7 +219,7 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         
         view.setNeedsLayout()
         showAccessoryView(true)
-        playerView?.hidden = true
+        playerView?.hidden = false
         player?.play()
     }
     
