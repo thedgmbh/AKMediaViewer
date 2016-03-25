@@ -296,7 +296,7 @@ public class AKMediaViewerManager : NSObject, UIGestureRecognizerDelegate {
         let cachedImage: UIImage? = delegate?.mediaFocusManager?(self, cachedImageForView: mediaView)
         if (cachedImage != nil) {
             viewController.mainImageView.image = cachedImage
-            return viewController;
+            return viewController
         }
         
         if (isVideoURL(url!)) {
@@ -378,7 +378,7 @@ public class AKMediaViewerManager : NSObject, UIGestureRecognizerDelegate {
         
         finalImageFrame = self.delegate?.mediaFocusManager?(self, finalFrameForView: mediaView)
         if (finalImageFrame == nil) {
-            finalImageFrame = parentViewController.view.bounds;
+            finalImageFrame = parentViewController.view.bounds
         }
         
         if(imageView.contentMode == UIViewContentMode.ScaleAspectFill) {
@@ -542,7 +542,7 @@ public class AKMediaViewerManager : NSObject, UIGestureRecognizerDelegate {
                                         self.mediaView.hidden = false
                                         self.focusViewController!.view .removeFromSuperview()
                                         self.focusViewController!.removeFromParentViewController()
-                                        self.focusViewController = nil;
+                                        self.focusViewController = nil
                                         self.delegate?.mediaFocusManagerDidDisappear?(self)
                                 })
                         })
@@ -607,14 +607,14 @@ public class AKMediaViewerManager : NSObject, UIGestureRecognizerDelegate {
         UIView.animateWithDuration(0.4 * duration,
                                    animations: {
                                     self.delegate?.mediaFocusManagerWillDisappear?(self)
-                                    self.focusViewController!.contentView.transform = CGAffineTransformIdentity;
+                                    self.focusViewController!.contentView.transform = CGAffineTransformIdentity
                                     
-                                    contentView.center = CGPointMake(self.focusViewController!.view.center.x, self.focusViewController!.view.center.y + offset);
+                                    contentView.center = CGPointMake(self.focusViewController!.view.center.x, self.focusViewController!.view.center.y + offset)
                                     }, completion: { (finished: Bool) -> Void in
                                         UIView.animateWithDuration(0.6 * duration,
                                             animations: {
                                                 contentView.center = contentView.superview!.convertPoint(self.mediaView.center, fromView: self.mediaView.superview)
-                                                contentView.transform = self.mediaView.transform;
+                                                contentView.transform = self.mediaView.transform
                                                 self.updateBoundsDuringAnimationWithElasticRatio(0)
                                             }, completion: { (finished: Bool) -> Void in
                                                 self.mediaView.hidden = false

@@ -17,6 +17,7 @@ public class AKMediaFocusBasicToolbarController : UIViewController {
     public override func viewDidLoad() {
         
         doneButton.setTitle(NSLocalizedString("Done", comment: "Done"), forState: UIControlState.Normal)
+        doneButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         doneButton.backgroundColor =  UIColor.init(white: 0, alpha: 0.5)
         doneButton.sizeToFit()
         
