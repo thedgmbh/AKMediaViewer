@@ -25,7 +25,7 @@ public class AKVideoControlView : UIView {
     
     deinit {
         scrubbing.removeObserver(self, forKeyPath: "player")
-        scrubbing.removeObserver(self, forKeyPath: "rate")
+        scrubbing.player.removeObserver(self, forKeyPath: "rate")
     }
     
     class func videoControlView() -> AKVideoControlView {
@@ -45,7 +45,7 @@ public class AKVideoControlView : UIView {
     override public func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
         if (keyPath == "player") {
             if(scrubbing.player != nil) {
-                scrubbing.addObserver(self, forKeyPath: "rate", options: NSKeyValueObservingOptions.New, context: nil)
+                scrubbing.player.addObserver(self, forKeyPath: "rate", options: NSKeyValueObservingOptions.New, context: nil)
             }
         } else {
             let player = object as! AVPlayer
