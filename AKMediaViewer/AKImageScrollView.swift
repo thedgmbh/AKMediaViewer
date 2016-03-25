@@ -58,7 +58,7 @@ public class AKImageScrollView : UIScrollView, UIScrollViewDelegate {
             return super.frame
         }
         set (newFrame) {
-            let sizeChanging: Bool = !CGSizeEqualToSize(frame.size, self.frame.size)
+            let sizeChanging: Bool = !CGSizeEqualToSize(newFrame.size, self.frame.size)
             
             if (sizeChanging) {
                 prepareToResize()
