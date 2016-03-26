@@ -9,7 +9,7 @@ Pod::Spec.new do |spec|
   spec.social_media_url   		= "http://twitter.com/di_autilio"
   spec.platform           		= :ios
   spec.frameworks             = "UIKit", "Foundation", "CoreGraphics", "AVFoundation"
-  spec.ios.deployment_target	= "7.0"
+  spec.ios.deployment_target	= "8.0"
   spec.source             		= { :git => "https://github.com/dogo/AKMediaViewer.git", :tag => spec.version.to_s }
   spec.source_files       		= "AKMediaViewer/*.{h,swift}"
   spec.resources              = ['AKMediaViewer/xib/*.xib', 'AKMediaViewer/Resources/*.png']

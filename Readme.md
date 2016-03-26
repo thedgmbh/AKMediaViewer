@@ -156,7 +156,7 @@ public var topAccessoryController: UIViewController?
 Controller used to show custom accessories. If none is specified a default controller is used with a simple close button.
 
 ### Hiding the status bar
-On iOS 7, if you want to hide or show the status bar when a view is focused or defocused, you can use optional delegate methods `.mediaFocusManagerWillAppear:` and `.mediaFocusManagerWillDisappear:`.
+If you want to hide or show the status bar when a view is focused or defocused, you can use optional delegate methods `.mediaFocusManagerWillAppear:` and `.mediaFocusManagerWillDisappear:`.
 
 Here is an example on how to hide and show the status bar. As the delegate methods are called inside an animation block, the status bar will be hidden or shown with animation.
 ```swift
