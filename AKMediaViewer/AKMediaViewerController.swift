@@ -157,33 +157,33 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         } else {
             switch (UIDevice.currentDevice().orientation)
             {
-            case UIDeviceOrientation.LandscapeRight:
-                if(parentViewController!.interfaceOrientation == UIInterfaceOrientation.Portrait) {
-                    transform = CGAffineTransformMakeRotation(CGFloat(-M_PI_2))
-                } else {
-                    transform = CGAffineTransformMakeRotation(CGFloat(M_PI_2))
-                }
-                break
-                
-            case UIDeviceOrientation.LandscapeLeft:
-                if(parentViewController!.interfaceOrientation == UIInterfaceOrientation.Portrait) {
-                    transform = CGAffineTransformMakeRotation(CGFloat(M_PI_2))
-                } else {
-                    transform = CGAffineTransformMakeRotation(CGFloat(-M_PI_2))
-                }
-                break
-                
-            case UIDeviceOrientation.Portrait:
-                transform = CGAffineTransformIdentity
-                break
-                
-            case UIDeviceOrientation.PortraitUpsideDown:
-                transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
-                break
-                
-            case UIDeviceOrientation.FaceDown: return
-            case UIDeviceOrientation.FaceUp: return
-            case UIDeviceOrientation.Unknown: return
+                case UIDeviceOrientation.LandscapeRight:
+                    if(parentViewController!.interfaceOrientation == UIInterfaceOrientation.Portrait) {
+                        transform = CGAffineTransformMakeRotation(CGFloat(-M_PI_2))
+                    } else {
+                        transform = CGAffineTransformMakeRotation(CGFloat(M_PI_2))
+                    }
+                    break
+                    
+                case UIDeviceOrientation.LandscapeLeft:
+                    if(parentViewController!.interfaceOrientation == UIInterfaceOrientation.Portrait) {
+                        transform = CGAffineTransformMakeRotation(CGFloat(M_PI_2))
+                    } else {
+                        transform = CGAffineTransformMakeRotation(CGFloat(-M_PI_2))
+                    }
+                    break
+                    
+                case UIDeviceOrientation.Portrait:
+                    transform = CGAffineTransformIdentity
+                    break
+                    
+                case UIDeviceOrientation.PortraitUpsideDown:
+                    transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
+                    break
+                    
+                case UIDeviceOrientation.FaceDown: return
+                case UIDeviceOrientation.FaceUp: return
+                case UIDeviceOrientation.Unknown: return
             }
         }
         
