@@ -11,8 +11,6 @@ AKMediaViewer gives the ability to focus on any thumbnail image or video with a 
 
 Each thumbnail image view may have its own transformation, the focus and defocus animations make sure it cames back to its initial state.
 
-![](https://github.com/autresphere/ASMediaFocusManager/raw/master/Screenshots/video.gif) 
-
 ## Video
 A video player is shown if the media is a video (supported extension: ".mp4" and ".mov"). The video player comes with its own controls: play/pause button, slider and time labels. Scrubbing is available thanks to [ASBPlayerScrubbing](https://github.com/autresphere/ASBPlayerScrubbing).
 
