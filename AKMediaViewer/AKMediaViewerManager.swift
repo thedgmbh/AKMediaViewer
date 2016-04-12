@@ -197,7 +197,11 @@ public class AKMediaViewerManager : NSObject, UIGestureRecognizerDelegate {
         let imageColorSpaceModel: CGColorSpaceModel = CGColorSpaceGetModel(CGImageGetColorSpace(imageRef))
         var colorspaceRef: CGColorSpaceRef = CGImageGetColorSpace(imageRef)!
         
-        let unsupportedColorSpace: Bool = (imageColorSpaceModel == CGColorSpaceModel.Unknown || imageColorSpaceModel == CGColorSpaceModel.CMYK || imageColorSpaceModel == CGColorSpaceModel.Indexed)
+        let unsupportedColorSpace: Bool = (imageColorSpaceModel == CGColorSpaceModel.Unknown ||
+                                            imageColorSpaceModel == CGColorSpaceModel.Monochrome ||
+                                            imageColorSpaceModel == CGColorSpaceModel.CMYK ||
+                                            imageColorSpaceModel == CGColorSpaceModel.Indexed)
+        
         if (unsupportedColorSpace) {
             colorspaceRef = CGColorSpaceCreateDeviceRGB()!
         }
@@ -208,27 +212,23 @@ public class AKMediaViewerManager : NSObject, UIGestureRecognizerDelegate {
         let bytesPerRow: Int = bytesPerPixel * width
         let bitsPerComponent: Int = 8
         
+        // CGImageAlphaInfo.None is not supported in CGBitmapContextCreate.
+        // Since the original image here has no alpha info, use CGImageAlphaInfo.NoneSkipLast
+        // to create bitmap graphics contexts without alpha info.
         let context: CGContextRef = CGBitmapContextCreate(nil,
             width,
             height,
             bitsPerComponent,
             bytesPerRow,
             colorspaceRef,
-            CGBitmapInfo.ByteOrderDefault.rawValue | CGImageAlphaInfo.PremultipliedFirst.rawValue)!
+            CGBitmapInfo.ByteOrderDefault.rawValue | CGImageAlphaInfo.NoneSkipLast.rawValue)!
         
-        // Draw the image into the context and retrieve the new image, which will now have an alpha layer
+        // Draw the image into the context and retrieve the new bitmap image without alpha
         CGContextDrawImage(context, CGRectMake(0, 0, CGFloat(width), CGFloat(height)), imageRef)
-        let imageRefWithAlpha: CGImageRef = CGBitmapContextCreateImage(context)!
-        let imageWithAlpha: UIImage = UIImage.init(CGImage: imageRefWithAlpha, scale: image.scale, orientation: image.imageOrientation)
+        let imageRefWithoutAlpha: CGImageRef = CGBitmapContextCreateImage(context)!
+        let imageWithoutAlpha: UIImage = UIImage.init(CGImage: imageRefWithoutAlpha, scale: image.scale, orientation: image.imageOrientation)
         
-        //        if (unsupportedColorSpace) {
-        //            CGColorSpaceRelease(colorspaceRef)
-        //        }
-        
-        //        CGContextRelease(context)
-        //        CGImageRelease(imageRefWithAlpha)
-        
-        return imageWithAlpha
+        return imageWithoutAlpha
     }
     
     func rectInsetsForRect(frame: CGRect, withRatio ratio: CGFloat) -> CGRect {
