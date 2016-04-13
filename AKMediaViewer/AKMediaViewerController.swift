@@ -130,7 +130,6 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         super.viewDidLayoutSubviews()
         if(playerView != nil) {
             playerView!.frame = mainImageView.bounds
-            layoutControlView()
         }
     }
     
@@ -206,10 +205,21 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         mainImageView.addSubview(self.playerView!)
         playerView!.autoresizingMask = [UIViewAutoresizing.FlexibleWidth , UIViewAutoresizing.FlexibleHeight]
         playerView!.hidden = true
-        player = AVPlayer.init(URL: url)
         
-        (playerView as! PlayerView).setPlayer(player!)
-        player!.currentItem?.addObserver(self, forKeyPath: "presentationSize", options: NSKeyValueObservingOptions.New, context: nil)
+        // install loading spinner
+        let activityIndicator : UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge)
+        activityIndicator.frame = UIScreen.mainScreen().bounds
+        activityIndicator.hidesWhenStopped = true
+        view.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
+        
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            self.player = AVPlayer(URL: url)
+            (self.playerView as! PlayerView).setPlayer(self.player!)
+            self.player!.currentItem?.addObserver(self, forKeyPath: "presentationSize", options: NSKeyValueObservingOptions.New, context: nil)
+            self.layoutControlView()
+            activityIndicator.stopAnimating()
+        })
     }
     
     public func focusDidEndWithZoomEnabled(zoomEnabled: Bool) {
@@ -349,7 +359,7 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.BeginFromCurrentState, animations: { () -> Void in
             self.imageScrollView.zoomScale = scale
             self.imageScrollView.layoutIfNeeded()
-            if(scale == self.imageScrollView.maximumZoomScale) {
+            if (scale == self.imageScrollView.maximumZoomScale) {
                 self.imageScrollView.scrollRectToVisible(frame, animated: false)
             }
             }, completion: nil)
