@@ -126,11 +126,7 @@ public class AKMediaViewerManager : NSObject, UIGestureRecognizerDelegate {
     
     // Install focusing gesture on the specified view.
     public func installOnView(view: UIView) {
-        
-        let tapGesture: UITapGestureRecognizer
-        let url: NSURL
-        
-        tapGesture = UITapGestureRecognizer.init(target: self, action: #selector(AKMediaViewerManager.handleFocusGesture(_:)))
+        let tapGesture: UITapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(AKMediaViewerManager.handleFocusGesture(_:)))
         view.addGestureRecognizer(tapGesture)
         view.userInteractionEnabled = true
         
@@ -138,7 +134,7 @@ public class AKMediaViewerManager : NSObject, UIGestureRecognizerDelegate {
         pinchRecognizer.delegate = self
         view.addGestureRecognizer(pinchRecognizer)
         
-        url = delegate!.mediaFocusManager(self, mediaURLForView: view)
+        let url: NSURL = delegate!.mediaFocusManager(self, mediaURLForView: view)
         if(addPlayIconOnVideo && isVideoURL(url)) {
             videoBehavior.addVideoIconToView(view, image: playImage)
         }
@@ -158,8 +154,7 @@ public class AKMediaViewerManager : NSObject, UIGestureRecognizerDelegate {
     }
     
     func setupAccessoryViewOnFocusViewController(focusViewController: AKMediaViewerController!) {
-        if(topAccessoryController == nil)
-        {
+        if(topAccessoryController == nil) {
             let defaultController: AKMediaFocusBasicToolbarController = AKMediaFocusBasicToolbarController(nibName: "AKMediaFocusBasicToolbar", bundle: nil)
             defaultController.view.backgroundColor = UIColor.clearColor()
             defaultController.doneButton.addTarget(self, action: #selector(AKMediaViewerManager.endFocusing), forControlEvents:UIControlEvents.TouchUpInside)
