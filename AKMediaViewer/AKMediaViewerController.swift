@@ -46,6 +46,7 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
     @IBOutlet var accessoryView: UIView!
     @IBOutlet var contentView: UIView!
     
+    var accessoryViewTimer: NSTimer?
     var player: AVPlayer?
     var previousOrientation: UIDeviceOrientation = UIDeviceOrientation.Unknown
     
@@ -231,6 +232,8 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         showAccessoryView(true)
         playerView?.hidden = false
         player?.play()
+        
+        addAcessoryViewTimer()
     }
     
     public func defocusWillStart() {
@@ -242,6 +245,17 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
     }
     
     // MARK: - Private
+    
+    func addAcessoryViewTimer() {
+        if (player != nil) {
+            accessoryViewTimer = NSTimer.scheduledTimerWithTimeInterval(1.5, target: self, selector: #selector(AKMediaViewerController.removeAcessoryViewTimer), userInfo: nil, repeats: false)
+        }
+    }
+    
+    func removeAcessoryViewTimer() {
+        accessoryViewTimer?.invalidate()
+        showAccessoryView(false)
+    }
     
     func installZoomView() {
         let scrollView: AKImageScrollView = AKImageScrollView.init(frame: contentView.bounds)
