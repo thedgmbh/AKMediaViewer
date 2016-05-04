@@ -233,7 +233,7 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         playerView?.hidden = false
         player?.play()
         
-        addAcessoryViewTimer()
+        addAccessoryViewTimer()
     }
     
     public func defocusWillStart() {
@@ -246,13 +246,13 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
     
     // MARK: - Private
     
-    func addAcessoryViewTimer() {
+    func addAccessoryViewTimer() {
         if (player != nil) {
-            accessoryViewTimer = NSTimer.scheduledTimerWithTimeInterval(1.5, target: self, selector: #selector(AKMediaViewerController.removeAcessoryViewTimer), userInfo: nil, repeats: false)
+            accessoryViewTimer = NSTimer.scheduledTimerWithTimeInterval(1.5, target: self, selector: #selector(AKMediaViewerController.removeAccessoryViewTimer), userInfo: nil, repeats: false)
         }
     }
     
-    func removeAcessoryViewTimer() {
+    func removeAccessoryViewTimer() {
         accessoryViewTimer?.invalidate()
         showAccessoryView(false)
     }
