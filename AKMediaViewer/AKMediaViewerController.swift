@@ -49,6 +49,7 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
     var accessoryViewTimer: NSTimer?
     var player: AVPlayer?
     var previousOrientation: UIDeviceOrientation = UIDeviceOrientation.Unknown
+    var activityIndicator : UIActivityIndicatorView?
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -207,19 +208,21 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         playerView!.autoresizingMask = [UIViewAutoresizing.FlexibleWidth , UIViewAutoresizing.FlexibleHeight]
         playerView!.hidden = true
         
-        // install loading spinner
-        let activityIndicator : UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge)
-        activityIndicator.frame = UIScreen.mainScreen().bounds
-        activityIndicator.hidesWhenStopped = true
-        view.addSubview(activityIndicator)
-        activityIndicator.startAnimating()
+        // install loading spinner for remote files
+        if(!url.fileURL) {
+            self.activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge)
+            self.activityIndicator!.frame = UIScreen.mainScreen().bounds
+            self.activityIndicator!.hidesWhenStopped = true
+            view.addSubview(self.activityIndicator!)
+            self.activityIndicator!.startAnimating()
+        }
         
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
             self.player = AVPlayer(URL: url)
             (self.playerView as! PlayerView).setPlayer(self.player!)
             self.player!.currentItem?.addObserver(self, forKeyPath: "presentationSize", options: NSKeyValueObservingOptions.New, context: nil)
             self.layoutControlView()
-            activityIndicator.stopAnimating()
+            self.activityIndicator?.stopAnimating()
         })
     }
     
