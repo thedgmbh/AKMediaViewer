@@ -172,7 +172,7 @@ public class AKMediaViewerManager : NSObject, UIGestureRecognizerDelegate {
     // Taken from https://github.com/rs/SDWebImage/blob/master/SDWebImage/SDWebImageDecoder.m
     func decodedImageWithImage(image: UIImage) -> UIImage {
         // do not decode animated images
-        if ((image.images) != nil) {
+        if (image.images != nil) {
             return image
         }
         
@@ -299,6 +299,7 @@ public class AKMediaViewerManager : NSObject, UIGestureRecognizerDelegate {
         } else {
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), { () -> Void in
                 self.loadImageFromURL(url!, onImageView: viewController.mainImageView)
+                viewController.mainImageView.hidden = false
             })
         }
         return viewController
