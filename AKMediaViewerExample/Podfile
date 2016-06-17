@@ -1,8 +1,9 @@
 # Uncomment this line to define a global platform for your project
 # platform :ios, '6.0'
 
-xcodeproj '../AKMediaViewer.xcodeproj'
+use_frameworks!
 
-target 'AKMediaViewer' do
+target 'AKMediaViewerExample' do
   pod 'ASBPlayerScrubbing'
+  pod 'AKMediaViewer', :path => '../AKMediaViewer.podspec'
 end

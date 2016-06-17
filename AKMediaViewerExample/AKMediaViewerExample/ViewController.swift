@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AKMediaViewer
 
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, AKMediaViewerDelegate {
     
@@ -29,74 +30,78 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         super.didReceiveMemoryWarning()
     }
     
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        return UIInterfaceOrientationMask.All
+    override open var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        get {
+            return UIInterfaceOrientationMask.all
+        }
     }
-    
-    override func prefersStatusBarHidden() -> Bool {
-        return self.statusBarHidden
+
+    override open var prefersStatusBarHidden: Bool {
+        get {
+            return self.statusBarHidden
+        }
     }
     
     // MARK: - <AKMediaViewerDelegate>
     
-    func parentViewControllerForMediaFocusManager(manager: AKMediaViewerManager) -> UIViewController {
+    func parentViewControllerForMediaViewerManager(_ manager: AKMediaViewerManager) -> UIViewController {
         return self
     }
     
-    func mediaFocusManager(manager: AKMediaViewerManager,  mediaURLForView view: UIView) -> NSURL {
+    func mediaViewerManager(_ manager: AKMediaViewerManager,  mediaURLForView view: UIView) -> URL {
         let index: Int = view.tag - 1
-        let name: NSString = mediaNames[index]
-        let url: NSURL = NSBundle.mainBundle().URLForResource(name.stringByDeletingPathExtension, withExtension: name.pathExtension)!
+        let name: NSString = mediaNames[index] as NSString
+        let url: URL = Bundle.main.url(forResource: name.deletingPathExtension, withExtension: name.pathExtension)!
         
         return url
     }
     
-    func mediaFocusManager(manager: AKMediaViewerManager, titleForView view: UIView) -> String {
-        let url: NSURL = mediaFocusManager(manager, mediaURLForView: view)
-        let fileExtension: String = url.pathExtension!.lowercaseString
+    func mediaViewerManager(_ manager: AKMediaViewerManager, titleForView view: UIView) -> String {
+        let url: URL = mediaViewerManager(manager, mediaURLForView: view)
+        let fileExtension: String = url.pathExtension.lowercased()
         let isVideo: Bool = fileExtension == "mp4" || fileExtension == "mov"
     
         return (isVideo ? "Videos are also supported." : "Of course, you can zoom in and out on the image.")
     }
     
-    func mediaFocusManagerWillAppear(manager: AKMediaViewerManager) {
+    func mediaViewerManagerWillAppear(_ manager: AKMediaViewerManager) {
         /*
          *  Call here setDefaultDoneButtonText, if you want to change the text and color of default "Done" button
-         *  eg: [self.mediaFocusManager setDefaultDoneButtonText:@"Panda" withColor:[UIColor purpleColor]]
+         *  eg: mediaFocusManager!.setDefaultDoneButtonText("Panda", withColor: UIColor.purple)
          */
         self.statusBarHidden = true
-        if (self.respondsToSelector(#selector(UIViewController.setNeedsStatusBarAppearanceUpdate))) {
+        if (self.responds(to: #selector(UIViewController.setNeedsStatusBarAppearanceUpdate))) {
             self.setNeedsStatusBarAppearanceUpdate()
         }
     }
     
-    func mediaFocusManagerWillDisappear(mediaFocusManager: AKMediaViewerManager) {
+    func mediaViewerManagerWillDisappear(_ mediaFocusManager: AKMediaViewerManager) {
         self.statusBarHidden = false
-        if (self.respondsToSelector(#selector(UIViewController.setNeedsStatusBarAppearanceUpdate))) {
+        if (self.responds(to: #selector(UIViewController.setNeedsStatusBarAppearanceUpdate))) {
             self.setNeedsStatusBarAppearanceUpdate()
         }
     }
     
     // MARK: - <UITableViewDataSource>
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath:NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath:IndexPath) -> UITableViewCell {
 
-        let cell = (tableView.dequeueReusableCellWithIdentifier("MediaCell", forIndexPath: indexPath) as! MediaCell)
+        let cell = (tableView.dequeueReusableCell(withIdentifier: "MediaCell", for: indexPath) as! MediaCell)
         let path: String = String.init(format: "%d.jpg", indexPath.row + 1)
         let image: UIImage = UIImage.init(named: path)!
         
         cell.thumbnailView.image = image
-        cell.thumbnailView.tag = indexPath.row + 1
+        cell.thumbnailView.tag = (indexPath as NSIndexPath).row + 1
         mediaFocusManager!.installOnView(cell.thumbnailView)        
         
         return cell
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return mediaNames.count
     }
 }

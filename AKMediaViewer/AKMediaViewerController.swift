@@ -10,14 +10,14 @@ import Foundation
 import AVFoundation
 import UIKit
 
-let kDefaultOrientationAnimationDuration: NSTimeInterval = 0.4
+let kDefaultOrientationAnimationDuration: TimeInterval = 0.4
 let kDefaultControlMargin: CGFloat = 5
 
 // MARK: - PlayerView
 
 public class PlayerView: UIView {
     
-    override public class func layerClass() -> AnyClass {
+    override public class var layerClass: AnyClass {
         return AVPlayerLayer.self
     }
     
@@ -25,7 +25,7 @@ public class PlayerView: UIView {
         return (layer as! AVPlayerLayer).player!
     }
     
-    func setPlayer(player: AVPlayer) {
+    func setPlayer(_ player: AVPlayer) {
         (layer as! AVPlayerLayer).player = player
     }
 }
@@ -46,12 +46,12 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
     @IBOutlet var accessoryView: UIView!
     @IBOutlet var contentView: UIView!
     
-    var accessoryViewTimer: NSTimer?
+    var accessoryViewTimer: Timer?
     var player: AVPlayer?
-    var previousOrientation: UIDeviceOrientation = UIDeviceOrientation.Unknown
+    var previousOrientation: UIDeviceOrientation = UIDeviceOrientation.unknown
     var activityIndicator : UIActivityIndicatorView?
     
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         
         doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(AKMediaViewerController.handleDoubleTap(_:)))
@@ -59,7 +59,7 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         controlMargin = kDefaultControlMargin
         
         tapGesture = UITapGestureRecognizer(target: self, action: #selector(AKMediaViewerController.handleTap(_:)))
-        tapGesture.requireGestureRecognizerToFail(doubleTapGesture)
+        tapGesture.require(toFail: doubleTapGesture)
         
         view.addGestureRecognizer(tapGesture)
     }
@@ -80,48 +80,50 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
     override public func viewDidLoad() {
         super.viewDidLoad()
         titleLabel.layer.shadowOpacity = 1
-        titleLabel.layer.shadowOffset = CGSizeZero
+        titleLabel.layer.shadowOffset = CGSize.zero
         titleLabel.layer.shadowRadius = 1
         accessoryView.alpha = 0
     }
     
-    override public func viewDidAppear(animated: Bool) {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AKMediaViewerController.orientationDidChangeNotification(_:)), name: UIDeviceOrientationDidChangeNotification, object: nil)
-        UIDevice.currentDevice().beginGeneratingDeviceOrientationNotifications()
+    override public func viewDidAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(AKMediaViewerController.orientationDidChangeNotification(_:)), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+        UIDevice.current.beginGeneratingDeviceOrientationNotifications()
         super.viewDidAppear(animated)
     }
     
-    override public func viewWillDisappear(animated: Bool) {
+    override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIDeviceOrientationDidChangeNotification, object: nil)
-        UIDevice.currentDevice().endGeneratingDeviceOrientationNotifications()
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+        UIDevice.current.endGeneratingDeviceOrientationNotifications()
     }
     
-    override public func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        return UIInterfaceOrientationMask.Portrait
+    override public var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        get {
+            return UIInterfaceOrientationMask.portrait
+        }
     }
     
-    func isParentSupportingInterfaceOrientation(toInterfaceOrientation : UIInterfaceOrientation) -> Bool {
+    func isParentSupportingInterfaceOrientation(_ toInterfaceOrientation : UIInterfaceOrientation) -> Bool {
         switch(toInterfaceOrientation)
         {
-        case UIInterfaceOrientation.Portrait:
-            return parentViewController!.supportedInterfaceOrientations().contains(UIInterfaceOrientationMask.Portrait)
+        case UIInterfaceOrientation.portrait:
+            return parent!.supportedInterfaceOrientations.contains(UIInterfaceOrientationMask.portrait)
             
-        case UIInterfaceOrientation.PortraitUpsideDown:
-            return parentViewController!.supportedInterfaceOrientations().contains(UIInterfaceOrientationMask.PortraitUpsideDown)
+        case UIInterfaceOrientation.portraitUpsideDown:
+            return parent!.supportedInterfaceOrientations.contains(UIInterfaceOrientationMask.portraitUpsideDown)
             
-        case UIInterfaceOrientation.LandscapeLeft:
-            return parentViewController!.supportedInterfaceOrientations().contains(UIInterfaceOrientationMask.LandscapeLeft)
+        case UIInterfaceOrientation.landscapeLeft:
+            return parent!.supportedInterfaceOrientations.contains(UIInterfaceOrientationMask.landscapeLeft)
             
-        case UIInterfaceOrientation.LandscapeRight:
-            return parentViewController!.supportedInterfaceOrientations().contains(UIInterfaceOrientationMask.LandscapeRight)
+        case UIInterfaceOrientation.landscapeRight:
+            return parent!.supportedInterfaceOrientations.contains(UIInterfaceOrientationMask.landscapeRight)
             
-        case UIInterfaceOrientation.Unknown:
+        case UIInterfaceOrientation.unknown:
             return true
         }
     }
     
-    override public func beginAppearanceTransition(isAppearing: Bool, animated: Bool) {
+    override public func beginAppearanceTransition(_ isAppearing: Bool, animated: Bool) {
         if(!isAppearing) {
             accessoryView.alpha = 0
             playerView?.alpha = 0
@@ -137,60 +139,60 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
     
     // MARK: - Public
     
-    public func updateOrientationAnimated(animated: Bool) {
+    public func updateOrientationAnimated(_ animated: Bool) {
         
         var transform: CGAffineTransform?
         var frame: CGRect
-        var duration: NSTimeInterval = kDefaultOrientationAnimationDuration
+        var duration: TimeInterval = kDefaultOrientationAnimationDuration
         
-        if (UIDevice.currentDevice().orientation == previousOrientation) {
+        if (UIDevice.current.orientation == previousOrientation) {
             return
         }
         
-        if (UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation) && UIDeviceOrientationIsLandscape(previousOrientation)) ||
-            (UIDeviceOrientationIsPortrait(UIDevice.currentDevice().orientation) && UIDeviceOrientationIsPortrait(previousOrientation))
+        if (UIDeviceOrientationIsLandscape(UIDevice.current.orientation) && UIDeviceOrientationIsLandscape(previousOrientation)) ||
+            (UIDeviceOrientationIsPortrait(UIDevice.current.orientation) && UIDeviceOrientationIsPortrait(previousOrientation))
         {
             duration *= 2
         }
         
-        if(UIDevice.currentDevice().orientation == UIDeviceOrientation.Portrait) || isParentSupportingInterfaceOrientation(UIApplication.sharedApplication().statusBarOrientation) {
-            transform = CGAffineTransformIdentity
+        if(UIDevice.current.orientation == UIDeviceOrientation.portrait) || isParentSupportingInterfaceOrientation(UIApplication.shared.statusBarOrientation) {
+            transform = CGAffineTransform.identity
         } else {
-            switch (UIDevice.currentDevice().orientation)
+            switch (UIDevice.current.orientation)
             {
-                case UIDeviceOrientation.LandscapeRight:
-                    if(parentViewController!.interfaceOrientation == UIInterfaceOrientation.Portrait) {
-                        transform = CGAffineTransformMakeRotation(CGFloat(-M_PI_2))
+                case UIDeviceOrientation.landscapeRight:
+                    if(parent!.interfaceOrientation == UIInterfaceOrientation.portrait) {
+                        transform = CGAffineTransform(rotationAngle: CGFloat(-M_PI_2))
                     } else {
-                        transform = CGAffineTransformMakeRotation(CGFloat(M_PI_2))
+                        transform = CGAffineTransform(rotationAngle: CGFloat(M_PI_2))
                     }
                     break
                     
-                case UIDeviceOrientation.LandscapeLeft:
-                    if(parentViewController!.interfaceOrientation == UIInterfaceOrientation.Portrait) {
-                        transform = CGAffineTransformMakeRotation(CGFloat(M_PI_2))
+                case UIDeviceOrientation.landscapeLeft:
+                    if(parent!.interfaceOrientation == UIInterfaceOrientation.portrait) {
+                        transform = CGAffineTransform(rotationAngle: CGFloat(M_PI_2))
                     } else {
-                        transform = CGAffineTransformMakeRotation(CGFloat(-M_PI_2))
+                        transform = CGAffineTransform(rotationAngle: CGFloat(-M_PI_2))
                     }
                     break
                     
-                case UIDeviceOrientation.Portrait:
-                    transform = CGAffineTransformIdentity
+                case UIDeviceOrientation.portrait:
+                    transform = CGAffineTransform.identity
                     break
                     
-                case UIDeviceOrientation.PortraitUpsideDown:
-                    transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
+                case UIDeviceOrientation.portraitUpsideDown:
+                    transform = CGAffineTransform(rotationAngle: CGFloat(M_PI))
                     break
                     
-                case UIDeviceOrientation.FaceDown: return
-                case UIDeviceOrientation.FaceUp: return
-                case UIDeviceOrientation.Unknown: return
+                case UIDeviceOrientation.faceDown: return
+                case UIDeviceOrientation.faceUp: return
+                case UIDeviceOrientation.unknown: return
             }
         }
         
         if (animated) {
             frame = contentView.frame
-            UIView.animateWithDuration(duration, animations: { () -> Void in
+            UIView.animate(withDuration: duration, animations: { () -> Void in
                 self.contentView.transform = transform!
                 self.contentView.frame = frame
             })
@@ -199,41 +201,41 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
             self.contentView.transform = transform!
             self.contentView.frame = frame
         }
-        self.previousOrientation = UIDevice.currentDevice().orientation
+        self.previousOrientation = UIDevice.current.orientation
     }
     
-    public func showPlayerWithURL(url: NSURL) {
+    public func showPlayerWithURL(_ url: URL) {
         playerView = PlayerView.init(frame: mainImageView.bounds)
         mainImageView.addSubview(self.playerView!)
-        playerView!.autoresizingMask = [UIViewAutoresizing.FlexibleWidth , UIViewAutoresizing.FlexibleHeight]
-        playerView!.hidden = true
+        playerView!.autoresizingMask = [UIViewAutoresizing.flexibleWidth , UIViewAutoresizing.flexibleHeight]
+        playerView!.isHidden = true
         
         // install loading spinner for remote files
-        if(!url.fileURL) {
-            self.activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.WhiteLarge)
-            self.activityIndicator!.frame = UIScreen.mainScreen().bounds
+        if(!url.isFileURL) {
+            self.activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
+            self.activityIndicator!.frame = UIScreen.main.bounds
             self.activityIndicator!.hidesWhenStopped = true
             view.addSubview(self.activityIndicator!)
             self.activityIndicator!.startAnimating()
         }
         
-        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            self.player = AVPlayer(URL: url)
+        DispatchQueue.main.async(execute: { () -> Void in
+            self.player = AVPlayer(url: url)
             (self.playerView as! PlayerView).setPlayer(self.player!)
-            self.player!.currentItem?.addObserver(self, forKeyPath: "presentationSize", options: NSKeyValueObservingOptions.New, context: nil)
+            self.player!.currentItem?.addObserver(self, forKeyPath: "presentationSize", options: NSKeyValueObservingOptions.new, context: nil)
             self.layoutControlView()
             self.activityIndicator?.stopAnimating()
         })
     }
     
-    public func focusDidEndWithZoomEnabled(zoomEnabled: Bool) {
+    public func focusDidEndWithZoomEnabled(_ zoomEnabled: Bool) {
         if(zoomEnabled && (playerView == nil)) {
             installZoomView()
         }
         
         view.setNeedsLayout()
         showAccessoryView(true)
-        playerView?.hidden = false
+        playerView?.isHidden = false
         player?.play()
         
         addAccessoryViewTimer()
@@ -251,7 +253,7 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
     
     func addAccessoryViewTimer() {
         if (player != nil) {
-            accessoryViewTimer = NSTimer.scheduledTimerWithTimeInterval(1.5, target: self, selector: #selector(AKMediaViewerController.removeAccessoryViewTimer), userInfo: nil, repeats: false)
+            accessoryViewTimer = Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(AKMediaViewerController.removeAccessoryViewTimer), userInfo: nil, repeats: false)
         }
     }
     
@@ -262,20 +264,20 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
     
     func installZoomView() {
         let scrollView: AKImageScrollView = AKImageScrollView.init(frame: contentView.bounds)
-        scrollView.autoresizingMask = [UIViewAutoresizing.FlexibleHeight, UIViewAutoresizing.FlexibleWidth]
+        scrollView.autoresizingMask = [UIViewAutoresizing.flexibleHeight, UIViewAutoresizing.flexibleWidth]
         scrollView.delegate = self
         imageScrollView = scrollView
-        contentView.insertSubview(scrollView, atIndex: 0)
+        contentView.insertSubview(scrollView, at: 0)
         scrollView.displayImage(mainImageView.image!)
-        self.mainImageView.hidden = true
+        self.mainImageView.isHidden = true
         
         imageScrollView.addGestureRecognizer(doubleTapGesture)
     }
     
     func uninstallZoomView() {
-        let frame: CGRect = contentView.convertRect(imageScrollView.zoomImageView!.frame, fromView: imageScrollView)
-        imageScrollView.hidden = true
-        mainImageView.hidden = false
+        let frame: CGRect = contentView.convert(imageScrollView.zoomImageView!.frame, from: imageScrollView)
+        imageScrollView.isHidden = true
+        mainImageView.isHidden = false
         mainImageView.frame = frame
     }
     
@@ -283,8 +285,8 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         return (accessoryView.superview == view)
     }
     
-    func pinView(view: UIView) {
-        let frame: CGRect = self.view.convertRect(view.frame, fromView: view.superview)
+    func pinView(_ view: UIView) {
+        let frame: CGRect = self.view.convert(view.frame, from: view.superview)
         view.transform = view.superview!.transform
         self.view.addSubview(view)
         view.frame = frame
@@ -295,12 +297,12 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         pinView(accessoryView)
     }
     
-    func showAccessoryView(visible: Bool) {
+    func showAccessoryView(_ visible: Bool) {
         if(visible == accessoryViewsVisible()) {
             return
         }
         
-        UIView.animateWithDuration(0.5, delay: 0, options: [UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.AllowUserInteraction], animations: { () -> Void in
+        UIView.animate(withDuration: 0.5, delay: 0, options: [UIViewAnimationOptions.beginFromCurrentState, UIViewAnimationOptions.allowUserInteraction], animations: { () -> Void in
             self.accessoryView.alpha = (visible ? 1 : 0)
             }, completion: nil)
     }
@@ -330,50 +332,50 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         frame = self.controlView!.frame
         frame.size.width = self.view.bounds.size.width - self.controlMargin * 2
         frame.origin.x = self.controlMargin
-        titleFrame = self.controlView!.superview!.convertRect(titleLabel.frame, fromView: titleLabel.superview)
+        titleFrame = self.controlView!.superview!.convert(titleLabel.frame, from: titleLabel.superview)
         frame.origin.y =  titleFrame.origin.y - frame.size.height - self.controlMargin
         if(videoFrame.size.width > 0) {
-            frame.origin.y = min(frame.origin.y, CGRectGetMaxY(videoFrame) - frame.size.height - self.controlMargin as CGFloat)
+            frame.origin.y = min(frame.origin.y, videoFrame.maxY - frame.size.height - self.controlMargin as CGFloat)
         }
         self.controlView!.frame = frame
         
     }
     
     func buildVideoFrame() -> CGRect {
-        if(CGSizeEqualToSize(self.player!.currentItem!.presentationSize, CGSizeZero)) {
-            return CGRectZero
+        if(self.player!.currentItem!.presentationSize.equalTo(CGSize.zero)) {
+            return CGRect.zero
         }
         
-        var frame: CGRect = AVMakeRectWithAspectRatioInsideRect(self.player!.currentItem!.presentationSize, self.playerView!.bounds)
-        frame = CGRectIntegral(frame)
+        var frame: CGRect = AVMakeRect(aspectRatio: self.player!.currentItem!.presentationSize, insideRect: self.playerView!.bounds)
+        frame = frame.integral
         
         return frame
     }
     
     // MARK: - Actions
     
-    func handleTap(gesture: UITapGestureRecognizer) {
+    func handleTap(_ gesture: UITapGestureRecognizer) {
         if(imageScrollView.zoomScale == imageScrollView.minimumZoomScale) {
             showAccessoryView(!accessoryViewsVisible())
         }
     }
     
-    func handleDoubleTap(gesture: UITapGestureRecognizer) {
-        var frame: CGRect = CGRectZero
+    func handleDoubleTap(_ gesture: UITapGestureRecognizer) {
+        var frame: CGRect = CGRect.zero
         var location: CGPoint
         var contentView: UIView
         var scale: CGFloat
         
         if(imageScrollView.zoomScale == imageScrollView.minimumZoomScale) {
             scale = imageScrollView.maximumZoomScale
-            contentView = imageScrollView.delegate!.viewForZoomingInScrollView!(imageScrollView)!
-            location = gesture.locationInView(contentView)
-            frame = CGRectMake(location.x*imageScrollView.maximumZoomScale - imageScrollView.bounds.size.width/2, location.y*imageScrollView.maximumZoomScale - imageScrollView.bounds.size.height/2, imageScrollView.bounds.size.width, imageScrollView.bounds.size.height)
+            contentView = imageScrollView.delegate!.viewForZooming!(in: imageScrollView)!
+            location = gesture.location(in: contentView)
+            frame = CGRect(x: location.x*imageScrollView.maximumZoomScale - imageScrollView.bounds.size.width/2, y: location.y*imageScrollView.maximumZoomScale - imageScrollView.bounds.size.height/2, width: imageScrollView.bounds.size.width, height: imageScrollView.bounds.size.height)
         } else {
             scale = imageScrollView.minimumZoomScale
         }
         
-        UIView.animateWithDuration(0.5, delay: 0, options: UIViewAnimationOptions.BeginFromCurrentState, animations: { () -> Void in
+        UIView.animate(withDuration: 0.5, delay: 0, options: UIViewAnimationOptions.beginFromCurrentState, animations: { () -> Void in
             self.imageScrollView.zoomScale = scale
             self.imageScrollView.layoutIfNeeded()
             if (scale == self.imageScrollView.maximumZoomScale) {
@@ -384,22 +386,22 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
     
     // MARK: - <UIScrollViewDelegate>
     
-    public func viewForZoomingInScrollView(scrollView: UIScrollView) -> UIView? {
+    public func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return imageScrollView.zoomImageView
     }
     
-    public func scrollViewDidZoom(scrollView: UIScrollView) {
+    public func scrollViewDidZoom(_ scrollView: UIScrollView) {
         showAccessoryView(imageScrollView.zoomScale == imageScrollView.minimumZoomScale)
     }
     
     // MARK: - Notifications
     
-    func orientationDidChangeNotification(notification: NSNotification) {
+    func orientationDidChangeNotification(_ notification: Notification) {
         updateOrientationAnimated(true)
     }
     
     // MARK: - KVO
-    override public func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+    override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         view.setNeedsLayout()
     }
 }

@@ -6,7 +6,7 @@
 //  Copyright © 2016 AnyKey Entertainment. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 class MediaCell: UITableViewCell {
 

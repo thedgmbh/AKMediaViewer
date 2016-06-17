@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0730"
+   LastUpgradeVersion = "0800"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DD6CA1421C9C2E94002832D0"
-               BuildableName = "AKMediaViewer.app"
-               BlueprintName = "AKMediaViewer"
-               ReferencedContainer = "container:AKMediaViewer.xcodeproj">
+               BlueprintIdentifier = "DD3ABB0C1D89E48700E7332F"
+               BuildableName = "AKMediaViewerExample.app"
+               BlueprintName = "AKMediaViewerExample"
+               ReferencedContainer = "container:AKMediaViewerExample.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -28,34 +28,14 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DD6CA1561C9C2E95002832D0"
-               BuildableName = "AKMediaViewerTests.xctest"
-               BlueprintName = "AKMediaViewerTests"
-               ReferencedContainer = "container:AKMediaViewer.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DD6CA1611C9C2E95002832D0"
-               BuildableName = "AKMediaViewerUITests.xctest"
-               BlueprintName = "AKMediaViewerUITests"
-               ReferencedContainer = "container:AKMediaViewer.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DD6CA1421C9C2E94002832D0"
-            BuildableName = "AKMediaViewer.app"
-            BlueprintName = "AKMediaViewer"
-            ReferencedContainer = "container:AKMediaViewer.xcodeproj">
+            BlueprintIdentifier = "DD3ABB0C1D89E48700E7332F"
+            BuildableName = "AKMediaViewerExample.app"
+            BlueprintName = "AKMediaViewerExample"
+            ReferencedContainer = "container:AKMediaViewerExample.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -75,10 +55,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DD6CA1421C9C2E94002832D0"
-            BuildableName = "AKMediaViewer.app"
-            BlueprintName = "AKMediaViewer"
-            ReferencedContainer = "container:AKMediaViewer.xcodeproj">
+            BlueprintIdentifier = "DD3ABB0C1D89E48700E7332F"
+            BuildableName = "AKMediaViewerExample.app"
+            BlueprintName = "AKMediaViewerExample"
+            ReferencedContainer = "container:AKMediaViewerExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -94,10 +74,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DD6CA1421C9C2E94002832D0"
-            BuildableName = "AKMediaViewer.app"
-            BlueprintName = "AKMediaViewer"
-            ReferencedContainer = "container:AKMediaViewer.xcodeproj">
+            BlueprintIdentifier = "DD3ABB0C1D89E48700E7332F"
+            BuildableName = "AKMediaViewerExample.app"
+            BlueprintName = "AKMediaViewerExample"
+            ReferencedContainer = "container:AKMediaViewerExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

@@ -16,14 +16,14 @@ public class AKMediaFocusBasicToolbarController : UIViewController {
     
     public override func viewDidLoad() {
         
-        doneButton.setTitle(NSLocalizedString("Done", comment: "Done"), forState: UIControlState.Normal)
-        doneButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+        doneButton.setTitle(NSLocalizedString("Done", comment: "Done"), for: UIControlState())
+        doneButton.setTitleColor(UIColor.white, for: UIControlState())
         doneButton.backgroundColor =  UIColor.init(white: 0, alpha: 0.5)
         doneButton.sizeToFit()
         
-        doneButton.frame = CGRectInset(self.doneButton.frame, -20, -4)
+        doneButton.frame = self.doneButton.frame.insetBy(dx: -20, dy: -4)
         doneButton.layer.borderWidth = 2
         doneButton.layer.cornerRadius = 4
-        doneButton.layer.borderColor = UIColor.whiteColor().CGColor
+        doneButton.layer.borderColor = UIColor.white.cgColor
     }
 }

@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "AKMediaViewer"
-  spec.version      = "0.0.2"
+  spec.version      = "1.0.0"
   spec.summary      = "Beautiful iOS library to animate your image and video thumbnails to fullscreen. Written in Swift"
   spec.homepage     = "https://github.com/dogo/AKMediaViewer"
 
@@ -12,7 +12,7 @@ Pod::Spec.new do |spec|
   spec.ios.deployment_target	= "8.0"
   spec.source             		= { :git => "https://github.com/dogo/AKMediaViewer.git", :tag => spec.version.to_s }
   spec.source_files       		= "AKMediaViewer/*.{h,swift}"
-  spec.resources              = ['AKMediaViewer/xib/*.xib', 'AKMediaViewer/Resources/*.png']
+  spec.resource_bundles       = { 'AKMediaViewer' => ['AKMediaViewer/xib/*.xib', 'AKMediaViewer/Resources/*.png'] }
   spec.requires_arc       		= true
   spec.dependency 'ASBPlayerScrubbing', '~> 0.1'  
 end

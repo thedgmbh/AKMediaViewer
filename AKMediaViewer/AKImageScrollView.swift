@@ -13,8 +13,8 @@ public class AKImageScrollView : UIScrollView, UIScrollViewDelegate {
     
     public var zoomImageView: UIImageView?
     
-    var imageSize: CGSize = CGSizeZero
-    var pointToCenterAfterResize: CGPoint = CGPointZero
+    var imageSize: CGSize = CGSize.zero
+    var pointToCenterAfterResize: CGPoint = CGPoint.zero
     var scaleToRestoreAfterResize: CGFloat = 0.0
     
     override public init(frame: CGRect) {
@@ -58,7 +58,7 @@ public class AKImageScrollView : UIScrollView, UIScrollViewDelegate {
             return super.frame
         }
         set (newFrame) {
-            let sizeChanging: Bool = !CGSizeEqualToSize(newFrame.size, self.frame.size)
+            let sizeChanging: Bool = !newFrame.size.equalTo(self.frame.size)
             
             if (sizeChanging) {
                 prepareToResize()
@@ -74,7 +74,7 @@ public class AKImageScrollView : UIScrollView, UIScrollViewDelegate {
     
     // MARK: - Configure scrollView to display new image
     
-    public func displayImage(image: UIImage) {
+    public func displayImage(_ image: UIImage) {
         if(zoomImageView == nil) {
             self.zoomScale = 1.0
             
@@ -87,7 +87,7 @@ public class AKImageScrollView : UIScrollView, UIScrollViewDelegate {
         configureForImageSize(image.size)
     }
     
-    func configureForImageSize(imageSize: CGSize) {
+    func configureForImageSize(_ imageSize: CGSize) {
         self.imageSize = imageSize
         self.contentSize = imageSize
         setMaxMinZoomScalesForCurrentBounds()
@@ -126,8 +126,8 @@ public class AKImageScrollView : UIScrollView, UIScrollViewDelegate {
     // MARK: - Rotation support
     
     func prepareToResize() {
-        let boundsCenter: CGPoint = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds))
-        pointToCenterAfterResize = self.convertPoint(boundsCenter, toView: zoomImageView)
+        let boundsCenter: CGPoint = CGPoint(x: self.bounds.midX, y: self.bounds.midY)
+        pointToCenterAfterResize = self.convert(boundsCenter, to: zoomImageView)
         
         scaleToRestoreAfterResize = self.zoomScale
         
@@ -148,10 +148,10 @@ public class AKImageScrollView : UIScrollView, UIScrollViewDelegate {
         // Step 2: restore center point, first making sure it is within the allowable range.
         
         // 2a: convert our desired center point back to our own coordinate space
-        let boundsCenter: CGPoint = self.convertPoint(pointToCenterAfterResize, toView: zoomImageView)
+        let boundsCenter: CGPoint = self.convert(pointToCenterAfterResize, to: zoomImageView)
         
         // 2b: calculate the content offset that would yield that center point
-        var offset: CGPoint = CGPointMake(boundsCenter.x - self.bounds.size.width / 2.0, boundsCenter.y - self.bounds.size.height / 2.0)
+        var offset: CGPoint = CGPoint(x: boundsCenter.x - self.bounds.size.width / 2.0, y: boundsCenter.y - self.bounds.size.height / 2.0)
         
         // 2c: restore offset, adjusted to be within the allowable range
         let maxOffset: CGPoint = maximumContentOffset()
@@ -169,10 +169,10 @@ public class AKImageScrollView : UIScrollView, UIScrollViewDelegate {
     func maximumContentOffset() -> CGPoint {
         let contentSize: CGSize = self.contentSize
         let boundsSize: CGSize = self.bounds.size
-        return CGPointMake(contentSize.width - boundsSize.width, contentSize.height - boundsSize.height)
+        return CGPoint(x: contentSize.width - boundsSize.width, y: contentSize.height - boundsSize.height)
     }
     
     func minimumContentOffset() -> CGPoint {
-        return CGPointZero
+        return CGPoint.zero
     }
 }

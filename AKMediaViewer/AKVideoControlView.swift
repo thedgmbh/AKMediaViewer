@@ -20,7 +20,7 @@ public class AKVideoControlView : UIView {
     
     override public func awakeFromNib() {
         super.awakeFromNib()
-        scrubbing.addObserver(self, forKeyPath: "player", options: NSKeyValueObservingOptions.New, context: nil)
+        scrubbing.addObserver(self, forKeyPath: "player", options: NSKeyValueObservingOptions.new, context: nil)
     }
     
     deinit {
@@ -29,27 +29,28 @@ public class AKVideoControlView : UIView {
     }
     
     class func videoControlView() -> AKVideoControlView {
-        let objects: NSArray = NSBundle.mainBundle().loadNibNamed("AKVideoControlView", owner: nil, options: nil)
-        return objects.firstObject as! AKVideoControlView
+        let bundle = Bundle(for: AKVideoControlView.classForCoder())
+        let arrayOfViews = bundle.loadNibNamed("AKVideoControlView", owner: nil, options: nil);
+        return arrayOfViews?.first as! AKVideoControlView
     }
     
     // MARK: - IBActions
     
-    @IBAction func switchTimeLabel(sender: AnyObject) {
-        self.remainingTimeLabel.hidden = !self.remainingTimeLabel.hidden
-        self.durationLabel.hidden = !self.remainingTimeLabel.hidden
+    @IBAction func switchTimeLabel(_ sender: AnyObject) {
+        self.remainingTimeLabel.isHidden = !self.remainingTimeLabel.isHidden
+        self.durationLabel.isHidden = !self.remainingTimeLabel.isHidden
     }
     
     // MARK: - KVO
     
-    override public func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+    override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if (keyPath == "player") {
             if(scrubbing.player != nil) {
-                scrubbing.player.addObserver(self, forKeyPath: "rate", options: NSKeyValueObservingOptions.New, context: nil)
+                scrubbing.player.addObserver(self, forKeyPath: "rate", options: NSKeyValueObservingOptions.new, context: nil)
             }
         } else {
             let player = object as! AVPlayer
-            playPauseButton.selected = (player.rate != 0)                    
+            playPauseButton.isSelected = (player.rate != 0)                    
         }
     }
 }

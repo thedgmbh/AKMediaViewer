@@ -61,11 +61,11 @@ In your View Controller, add the code below to the image views need the focus fe
 override func viewDidLoad() {
     super.viewDidLoad()
     
-    mediaFocusManager = AKMediaViewerManager.init()
-    mediaFocusManager!.delegate = self
+    mediaViewerManager = AKMediaViewerManager.init()
+    mediaViewerManager!.delegate = self
 
     // Tells which views need to be focusable. You can put your image views in an array and give it to the focus manager.
-    mediaFocusManager!.installOnViews(imageViewsArray)
+    mediaViewerManager!.installOnViews(imageViewsArray)
 }
 ```
 
@@ -81,12 +81,12 @@ override func viewDidLoad() {
 // MARK: - AKMediaViewerDelegate
 // Returns the view controller in which the focus controller is going to be added.
 // This can be any view controller, fullscreen or not.
-func parentViewControllerForMediaFocusManager(manager: AKMediaViewerManager) -> UIViewController {
+func parentViewControllerForMediaViewerManager(manager: AKMediaViewerManager) -> UIViewController {
     return self
 }
 
 // Returns the URL where the media (image or video) is stored. The URL may be local (file://) or distant (http://).
-func mediaFocusManager(manager: AKMediaViewerManager,  mediaURLForView view: UIView) -> NSURL {
+func mediaViewerManager(manager: AKMediaViewerManager,  mediaURLForView view: UIView) -> NSURL {
     let index: Int = view.tag - 1
     let name: NSString = mediaNames[index]
     let url: NSURL = NSBundle.mainBundle().URLForResource(name.stringByDeletingPathExtension, withExtension: name.pathExtension)!
@@ -95,7 +95,7 @@ func mediaFocusManager(manager: AKMediaViewerManager,  mediaURLForView view: UIV
 }
 
 // Returns the title for this media view. Return nil if you don't want any title to appear.
-func mediaFocusManager(manager: AKMediaViewerManager, titleForView view: UIView) -> String {
+func mediaViewerManager(manager: AKMediaViewerManager, titleForView view: UIView) -> String {
 	return "My title"
 }
 
@@ -104,7 +104,7 @@ func mediaFocusManager(manager: AKMediaViewerManager, titleForView view: UIView)
 If you need to focus or defocus a view programmatically, you can call `startFocusingView` (as long as the view is focusable) or `endFocusing`.
 
 ```swift
-mediaFocusManager.startFocusingView(mediaView)
+mediaViewerManager.startFocusingView(mediaView)
 ```
 
 ###Properties
@@ -154,14 +154,14 @@ public var topAccessoryController: UIViewController?
 Controller used to show custom accessories. If none is specified a default controller is used with a simple close button.
 
 ### Hiding the status bar
-If you want to hide or show the status bar when a view is focused or defocused, you can use optional delegate methods `.mediaFocusManagerWillAppear:` and `.mediaFocusManagerWillDisappear:`.
+If you want to hide or show the status bar when a view is focused or defocused, you can use optional delegate methods `.mediaViewerManagerWillAppear:` and `.mediaViewerManagerWillDisappear:`.
 
 Here is an example on how to hide and show the status bar. As the delegate methods are called inside an animation block, the status bar will be hidden or shown with animation.
 ```swift
-func mediaFocusManagerWillAppear(manager: AKMediaViewerManager) {
+func mediaViewerManagerWillAppear(manager: AKMediaViewerManager) {
     /*
      *  Call here setDefaultDoneButtonText, if you want to change the text and color of default "Done" button
-     *  eg: [self.mediaFocusManager setDefaultDoneButtonText:@"Panda" withColor:[UIColor purpleColor]]
+     *  eg: mediaViewerManager!.setDefaultDoneButtonText("Panda", withColor: UIColor.purple)
      */
     self.statusBarHidden = true
     if (self.respondsToSelector(#selector(UIViewController.setNeedsStatusBarAppearanceUpdate))) {
@@ -169,7 +169,7 @@ func mediaFocusManagerWillAppear(manager: AKMediaViewerManager) {
     }
 }
 
-func mediaFocusManagerWillDisappear(mediaFocusManager: AKMediaViewerManager) {
+func mediaViewerManagerWillDisappear(mediaViewerManager: AKMediaViewerManager) {
     self.statusBarHidden = false
     if (self.respondsToSelector(#selector(UIViewController.setNeedsStatusBarAppearanceUpdate))) {
         self.setNeedsStatusBarAppearanceUpdate()
