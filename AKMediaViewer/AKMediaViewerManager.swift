@@ -155,7 +155,7 @@ public class AKMediaViewerManager : NSObject, UIGestureRecognizerDelegate {
     
     func setupAccessoryViewOnFocusViewController(_ focusViewController: AKMediaViewerController!) {
         if(topAccessoryController == nil) {
-            let defaultController: AKMediaFocusBasicToolbarController = AKMediaFocusBasicToolbarController(nibName: "AKMediaFocusBasicToolbar", bundle: Bundle(for: AKMediaFocusBasicToolbarController.classForCoder()))
+            let defaultController: AKMediaFocusBasicToolbarController = AKMediaFocusBasicToolbarController(nibName: "AKMediaFocusBasicToolbar", bundle: Bundle.AKMediaFrameworkBundle())
             defaultController.view.backgroundColor = UIColor.clear
             defaultController.doneButton.addTarget(self, action: #selector(AKMediaViewerManager.endFocusing), for:UIControlEvents.touchUpInside)
             topAccessoryController = defaultController
@@ -281,7 +281,8 @@ public class AKMediaViewerManager : NSObject, UIGestureRecognizerDelegate {
             return nil
         }
         
-        viewController = AKMediaViewerController.init(nibName: "AKMediaViewerController", bundle: Bundle(for: AKMediaViewerController.classForCoder()))
+        viewController = AKMediaViewerController.init(nibName: "AKMediaViewerController", bundle: Bundle.AKMediaFrameworkBundle())
+        
         installDefocusActionOnFocusViewController(viewController)
         
         viewController.titleLabel.text = delegate?.mediaViewerManager(self, titleForView: mediaView)

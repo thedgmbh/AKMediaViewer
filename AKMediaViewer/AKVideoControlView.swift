@@ -29,8 +29,7 @@ public class AKVideoControlView : UIView {
     }
     
     class func videoControlView() -> AKVideoControlView {
-        let bundle = Bundle(for: AKVideoControlView.classForCoder())
-        let arrayOfViews = bundle.loadNibNamed("AKVideoControlView", owner: nil, options: nil);
+        let arrayOfViews = Bundle.AKMediaFrameworkBundle().loadNibNamed("AKVideoControlView", owner: nil, options: nil);
         return arrayOfViews?.first as! AKVideoControlView
     }
     
