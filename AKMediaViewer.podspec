@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "AKMediaViewer"
-  spec.version      = "1.0.0"
+  spec.version      = "1.0.1"
   spec.summary      = "Beautiful iOS library to animate your image and video thumbnails to fullscreen. Written in Swift"
   spec.homepage     = "https://github.com/dogo/AKMediaViewer"
 
