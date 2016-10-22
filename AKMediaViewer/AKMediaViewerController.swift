@@ -51,6 +51,15 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
     var previousOrientation: UIDeviceOrientation = UIDeviceOrientation.unknown
     var activityIndicator : UIActivityIndicatorView?
     
+    var observersAdded = false
+    
+    struct ObservedValue {
+        static let PresentationSize = "presentationSize"
+        static let PLayerKeepUp = "playbackLikelyToKeepUp"
+        static let PLayerHasEmptyBuffer = "playbackBufferEmpty"
+        static let Status = "status"
+    }
+    
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         
@@ -69,10 +78,9 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
     }
     
     deinit {
-        if(player != nil) {
-            player!.currentItem!.removeObserver(self, forKeyPath: "presentationSize")
-        }
-        
+        removeObservers(player: self.player)
+        player?.removeObserver(self, forKeyPath: ObservedValue.Status)
+
         mainImageView = nil
         contentView = nil
     }
@@ -85,16 +93,32 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         accessoryView.alpha = 0
     }
     
+    override public func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        removeObservers(player: self.player)
+
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
+        UIDevice.current.endGeneratingDeviceOrientationNotifications()
+    }
+
     override public func viewDidAppear(_ animated: Bool) {
         NotificationCenter.default.addObserver(self, selector: #selector(AKMediaViewerController.orientationDidChangeNotification(_:)), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
         UIDevice.current.beginGeneratingDeviceOrientationNotifications()
         super.viewDidAppear(animated)
     }
+
     
-    override public func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
-        UIDevice.current.endGeneratingDeviceOrientationNotifications()
+    func removeObservers(player: AVPlayer?) -> Void {
+        if observersAdded {
+            guard let item = player?.currentItem else {
+                return
+            }
+            
+            item.removeObserver(self, forKeyPath: ObservedValue.PresentationSize)
+            item.removeObserver(self, forKeyPath: ObservedValue.PLayerKeepUp)
+            item.removeObserver(self, forKeyPath: ObservedValue.PLayerHasEmptyBuffer)
+            observersAdded = false
+        }
     }
     
     override public var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -220,11 +244,17 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         }
         
         DispatchQueue.main.async(execute: { () -> Void in
+            // remove old item observer if exists
+            self.removeObservers(player: self.player)
+            
             self.player = AVPlayer(url: url)
             (self.playerView as! PlayerView).setPlayer(self.player!)
-            self.player!.currentItem?.addObserver(self, forKeyPath: "presentationSize", options: NSKeyValueObservingOptions.new, context: nil)
+            self.player!.currentItem?.addObserver(self, forKeyPath: ObservedValue.PresentationSize, options: .new, context: nil)
+            self.player!.currentItem?.addObserver(self, forKeyPath: ObservedValue.PLayerHasEmptyBuffer, options: .new, context: nil)
+            self.player!.currentItem?.addObserver(self, forKeyPath: ObservedValue.PLayerKeepUp, options: .new, context: nil)
+            self.observersAdded = true
+            self.player!.addObserver(self, forKeyPath: ObservedValue.Status, options: .initial, context: nil)
             self.layoutControlView()
-            self.activityIndicator?.stopAnimating()
         })
     }
     
@@ -236,9 +266,12 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         view.setNeedsLayout()
         showAccessoryView(true)
         playerView?.isHidden = false
-        player?.play()
         
         addAccessoryViewTimer()
+
+        if player?.status == .readyToPlay {
+            playPLayer()
+        }
     }
     
     public func defocusWillStart() {
@@ -275,6 +308,7 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
     }
     
     func uninstallZoomView() {
+        
         let frame: CGRect = contentView.convert(imageScrollView.zoomImageView!.frame, from: imageScrollView)
         imageScrollView.isHidden = true
         mainImageView.isHidden = false
@@ -338,7 +372,6 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
             frame.origin.y = min(frame.origin.y, videoFrame.maxY - frame.size.height - self.controlMargin as CGFloat)
         }
         self.controlView!.frame = frame
-        
     }
     
     func buildVideoFrame() -> CGRect {
@@ -382,6 +415,7 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
                 self.imageScrollView.scrollRectToVisible(frame, animated: false)
             }
             }, completion: nil)
+        
     }
     
     // MARK: - <UIScrollViewDelegate>
@@ -400,8 +434,44 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         updateOrientationAnimated(true)
     }
     
+    func playPLayer() -> Void {
+        activityIndicator?.stopAnimating()
+        player?.play()
+    }
+    
     // MARK: - KVO
+    
     override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        view.setNeedsLayout()
+        
+        switch keyPath! {
+            
+        case ObservedValue.PLayerKeepUp:
+            if (player?.currentItem?.isPlaybackLikelyToKeepUp)! {
+                playPLayer()
+            }
+            
+        case ObservedValue.Status:
+            guard let status = player?.status else {
+                return
+            }
+            switch status {
+            case .readyToPlay:
+                playPLayer()
+            default:
+                player?.pause()
+                activityIndicator?.startAnimating()
+            }
+            
+        case ObservedValue.PLayerHasEmptyBuffer:
+            activityIndicator?.startAnimating()
+
+        case ObservedValue.PresentationSize:
+            view.setNeedsDisplay()
+            
+        default:
+            break
+        }
     }
 }
+
+
