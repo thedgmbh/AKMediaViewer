@@ -97,11 +97,21 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
         UIDevice.current.endGeneratingDeviceOrientationNotifications()
         player?.removeObserver(self, forKeyPath: "status")
-        player?.currentItem?.removeObserver(self, forKeyPath: "presentationSize")
-        player?.currentItem?.removeObserver(self, forKeyPath: "playbackLikelyToKeepUp")
-        player?.currentItem?.removeObserver(self, forKeyPath: "playbackBufferEmpty")
+        
+        removeObservers()
     }
     
+    func removeObservers() -> Void {
+        guard let item = player?.currentItem else {
+            
+            
+            return
+        }
+        item.removeObserver(self, forKeyPath: "presentationSize")
+        item.removeObserver(self, forKeyPath: "playbackLikelyToKeepUp")
+        item.removeObserver(self, forKeyPath: "playbackBufferEmpty")
+
+    }
     override public var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         get {
             return UIInterfaceOrientationMask.portrait
@@ -225,6 +235,9 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         }
         
         DispatchQueue.main.async(execute: { () -> Void in
+            if self.player != nil {
+                self.removeObservers()
+            }
             self.player = AVPlayer(url: url)
             (self.playerView as! PlayerView).setPlayer(self.player!)
             self.player!.currentItem?.addObserver(self, forKeyPath: "presentationSize", options: NSKeyValueObservingOptions.new, context: nil)
@@ -243,12 +256,13 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         view.setNeedsLayout()
         showAccessoryView(true)
         playerView?.isHidden = false
+        
+        addAccessoryViewTimer()
 
         if player?.status == .readyToPlay {
             playPLayer()
         }
         
-        addAccessoryViewTimer()
     }
     
     public func defocusWillStart() {
@@ -392,6 +406,7 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
                 self.imageScrollView.scrollRectToVisible(frame, animated: false)
             }
             }, completion: nil)
+        
     }
     
     // MARK: - <UIScrollViewDelegate>
