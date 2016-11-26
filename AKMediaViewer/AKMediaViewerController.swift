@@ -69,10 +69,6 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
     }
     
     deinit {
-        if(player != nil) {
-            player!.currentItem!.removeObserver(self, forKeyPath: "presentationSize")
-        }
-        
         mainImageView = nil
         contentView = nil
     }
@@ -83,7 +79,12 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         titleLabel.layer.shadowOffset = CGSize.zero
         titleLabel.layer.shadowRadius = 1
         accessoryView.alpha = 0
+        
     }
+    
+    
+
+   
     
     override public func viewDidAppear(_ animated: Bool) {
         NotificationCenter.default.addObserver(self, selector: #selector(AKMediaViewerController.orientationDidChangeNotification(_:)), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
@@ -95,6 +96,10 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
         UIDevice.current.endGeneratingDeviceOrientationNotifications()
+        player?.removeObserver(self, forKeyPath: "status")
+        player?.currentItem?.removeObserver(self, forKeyPath: "presentationSize")
+        player?.currentItem?.removeObserver(self, forKeyPath: "playbackLikelyToKeepUp")
+        player?.currentItem?.removeObserver(self, forKeyPath: "playbackBufferEmpty")
     }
     
     override public var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -223,8 +228,10 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
             self.player = AVPlayer(url: url)
             (self.playerView as! PlayerView).setPlayer(self.player!)
             self.player!.currentItem?.addObserver(self, forKeyPath: "presentationSize", options: NSKeyValueObservingOptions.new, context: nil)
+            self.player!.currentItem?.addObserver(self, forKeyPath: "playbackBufferEmpty", options: NSKeyValueObservingOptions.new, context: nil)
+            self.player!.currentItem?.addObserver(self, forKeyPath: "playbackLikelyToKeepUp", options: NSKeyValueObservingOptions.new, context: nil)
+            self.player!.addObserver(self, forKeyPath: "status", options: .initial, context: nil)
             self.layoutControlView()
-            self.activityIndicator?.stopAnimating()
         })
     }
     
@@ -236,7 +243,10 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         view.setNeedsLayout()
         showAccessoryView(true)
         playerView?.isHidden = false
-        player?.play()
+
+        if player?.status == .readyToPlay {
+            playPLayer()
+        }
         
         addAccessoryViewTimer()
     }
@@ -400,8 +410,48 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         updateOrientationAnimated(true)
     }
     
+    func playPLayer() -> Void {
+        
+        if (player?.currentItem?.isPlaybackLikelyToKeepUp)! {
+            activityIndicator?.stopAnimating()
+            player?.play()
+        }
+
+    }
+    
     // MARK: - KVO
     override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        view.setNeedsLayout()
+        
+        if object is AVPlayer {
+            if (keyPath == "status") {
+                guard let status = player?.status else {
+                    return
+                }
+                switch status {
+                case .readyToPlay:
+                    playPLayer()
+                default:
+                    player?.pause()
+                    activityIndicator?.startAnimating()
+                }
+            }
+        }
+        
+       
+        if keyPath == "playbackBufferEmpty" {
+            activityIndicator?.startAnimating()
+        }
+        
+        if keyPath == "presentationSize" {
+            view.setNeedsLayout()
+
+        }
+        if keyPath == "playbackLikelyToKeepUp" {
+            
+            playPLayer()
+        }
+        
     }
 }
+
+

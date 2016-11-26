@@ -51,7 +51,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     func mediaViewerManager(_ manager: AKMediaViewerManager,  mediaURLForView view: UIView) -> URL {
         let index: Int = view.tag - 1
         let name: NSString = mediaNames[index] as NSString
-        let url: URL = Bundle.main.url(forResource: name.deletingPathExtension, withExtension: name.pathExtension)!
+        let url: URL = URL(string: "https://cuju.rest/posts/v/582282a5c61a30000f519cd5.mp4?x-access-token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU4MjI5YTczOTQ4YWM2MDAwZmU2NjM1NyIsImF2YXRhciI6Ii91c2VyL21lL2F2YXRhciIsIm5hbWUiOiJNb2hhbWVkIE1haHJvdXMiLCJlbWFpbCI6Im0ubWFocm91cy45NEBnbWFpbC5jb20iLCJyb2xlIjoidXNlciIsImlhdCI6MTQ3ODcxMjgxNCwiZXhwIjoyOTU4NjM1MjI4fQ.V0b3msqEEWsmyt50i58mFjlOQsUTAbkSE8c4US0VjPE")!
         
         return url
     }
