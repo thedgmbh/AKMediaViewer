@@ -79,6 +79,8 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
     
     deinit {
         removeObservers(player: player)
+        player?.removeObserver(self, forKeyPath: ObservedValue.Status)
+
         mainImageView = nil
         contentView = nil
     }
@@ -108,7 +110,6 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
 
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
         UIDevice.current.endGeneratingDeviceOrientationNotifications()
-        player?.removeObserver(self, forKeyPath: ObservedValue.Status)
     }
     
     func removeObservers(player: AVPlayer?) -> Void {
