@@ -78,6 +78,7 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
     }
     
     deinit {
+        removeObservers(player: player)
         mainImageView = nil
         contentView = nil
     }
