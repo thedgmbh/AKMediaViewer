@@ -451,10 +451,8 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
     
     func playPLayer() -> Void {
         
-        if (player?.currentItem?.isPlaybackLikelyToKeepUp)! {
-            activityIndicator?.stopAnimating()
-            player?.play()
-        }
+        activityIndicator?.stopAnimating()
+        player?.play()
 
     }
     
@@ -462,8 +460,12 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
     override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         
         switch keyPath! {
+            
         case ObservedValue.PLayerKeepUp:
-            fallthrough
+            if (player?.currentItem?.isPlaybackLikelyToKeepUp)! {
+                playPLayer()
+            }
+            
         case ObservedValue.Status:
             guard let status = player?.status else {
                 return
@@ -476,6 +478,7 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
                 activityIndicator?.startAnimating()
             }
 
+            
         case ObservedValue.PLayerHasEmptyBuffer:
             activityIndicator?.startAnimating()
 
@@ -484,6 +487,8 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
             
         default:
             break
+        
+        
         }
     }
 }
