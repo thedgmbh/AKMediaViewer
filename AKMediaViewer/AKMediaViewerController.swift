@@ -164,7 +164,6 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         if(!isAppearing) {
             accessoryView.alpha = 0
             playerView?.alpha = 0
-            removeObservers(player: player)
         }
     }
     
@@ -258,8 +257,7 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         }
         
         DispatchQueue.main.async(execute: { () -> Void in
-            // remove old item observer if exists 
-            
+            // remove old item observer if exists
             self.removeObservers(player: self.player)
             
             self.player = AVPlayer(url: url)
@@ -296,7 +294,6 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         }
         pinAccessoryView()
         player?.pause()
-        removeObservers(player: player)
     }
     
     // MARK: - Private
@@ -309,7 +306,6 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
     
     func removeAccessoryViewTimer() {
         accessoryViewTimer?.invalidate()
-        removeObservers(player: player)
         showAccessoryView(false)
     }
     
