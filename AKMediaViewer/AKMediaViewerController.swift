@@ -51,6 +51,15 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
     var previousOrientation: UIDeviceOrientation = UIDeviceOrientation.unknown
     var activityIndicator : UIActivityIndicatorView?
     
+    var observersAdded = false
+    
+    struct ObservedValue {
+        static let PresentationSize = "presentationSize"
+        static let PLayerKeepUp = "playbackLikelyToKeepUp"
+        static let PLayerHasEmptyBuffer = "playbackBufferEmpty"
+        static let Status = "status"
+    }
+    
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         
@@ -94,24 +103,29 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
     
     override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        removeObservers(player: player)
+
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
         UIDevice.current.endGeneratingDeviceOrientationNotifications()
-        player?.removeObserver(self, forKeyPath: "status")
-        
-        removeObservers()
+        player?.removeObserver(self, forKeyPath: ObservedValue.Status)
     }
     
-    func removeObservers() -> Void {
-        guard let item = player?.currentItem else {
+    func removeObservers(player: AVPlayer?) -> Void {
+        if observersAdded {
+            guard let item = player?.currentItem else {
+                return
+            }
             
-            
-            return
+            item.removeObserver(self, forKeyPath: ObservedValue.PresentationSize)
+            item.removeObserver(self, forKeyPath: ObservedValue.PLayerKeepUp)
+            item.removeObserver(self, forKeyPath: ObservedValue.PLayerHasEmptyBuffer)
+            observersAdded = false
         }
-        item.removeObserver(self, forKeyPath: "presentationSize")
-        item.removeObserver(self, forKeyPath: "playbackLikelyToKeepUp")
-        item.removeObserver(self, forKeyPath: "playbackBufferEmpty")
 
     }
+    
+    
+    
     override public var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         get {
             return UIInterfaceOrientationMask.portrait
@@ -142,6 +156,7 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         if(!isAppearing) {
             accessoryView.alpha = 0
             playerView?.alpha = 0
+            removeObservers(player: player)
         }
     }
     
@@ -236,14 +251,15 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         
         DispatchQueue.main.async(execute: { () -> Void in
             if self.player != nil {
-                self.removeObservers()
+                self.removeObservers(player: self.player)
             }
             self.player = AVPlayer(url: url)
             (self.playerView as! PlayerView).setPlayer(self.player!)
-            self.player!.currentItem?.addObserver(self, forKeyPath: "presentationSize", options: NSKeyValueObservingOptions.new, context: nil)
-            self.player!.currentItem?.addObserver(self, forKeyPath: "playbackBufferEmpty", options: NSKeyValueObservingOptions.new, context: nil)
-            self.player!.currentItem?.addObserver(self, forKeyPath: "playbackLikelyToKeepUp", options: NSKeyValueObservingOptions.new, context: nil)
-            self.player!.addObserver(self, forKeyPath: "status", options: .initial, context: nil)
+            self.player!.currentItem?.addObserver(self, forKeyPath: ObservedValue.PresentationSize, options: NSKeyValueObservingOptions.new, context: nil)
+            self.player!.currentItem?.addObserver(self, forKeyPath: ObservedValue.PLayerHasEmptyBuffer, options: NSKeyValueObservingOptions.new, context: nil)
+            self.player!.currentItem?.addObserver(self, forKeyPath: ObservedValue.PLayerKeepUp, options: NSKeyValueObservingOptions.new, context: nil)
+            self.observersAdded = true
+            self.player!.addObserver(self, forKeyPath: ObservedValue.Status, options: .initial, context: nil)
             self.layoutControlView()
         })
     }
@@ -437,35 +453,30 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
     // MARK: - KVO
     override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         
-        if object is AVPlayer {
-            if (keyPath == "status") {
-                guard let status = player?.status else {
-                    return
-                }
-                switch status {
-                case .readyToPlay:
-                    playPLayer()
-                default:
-                    player?.pause()
-                    activityIndicator?.startAnimating()
-                }
+        switch keyPath! {
+        case ObservedValue.PLayerKeepUp:
+            fallthrough
+        case ObservedValue.Status:
+            guard let status = player?.status else {
+                return
             }
-        }
-        
-       
-        if keyPath == "playbackBufferEmpty" {
-            activityIndicator?.startAnimating()
-        }
-        
-        if keyPath == "presentationSize" {
-            view.setNeedsLayout()
+            switch status {
+            case .readyToPlay:
+                playPLayer()
+            default:
+                player?.pause()
+                activityIndicator?.startAnimating()
+            }
 
-        }
-        if keyPath == "playbackLikelyToKeepUp" {
+        case ObservedValue.PLayerHasEmptyBuffer:
+            activityIndicator?.startAnimating()
+
+        case ObservedValue.PresentationSize:
+            view.setNeedsDisplay()
             
-            playPLayer()
+        default:
+            break
         }
-        
     }
 }
 
