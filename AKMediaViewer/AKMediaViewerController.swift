@@ -250,9 +250,10 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         }
         
         DispatchQueue.main.async(execute: { () -> Void in
-            if self.player != nil {
-                self.removeObservers(player: self.player)
-            }
+            // remove old item observer if exists 
+            
+            self.removeObservers(player: self.player)
+            
             self.player = AVPlayer(url: url)
             (self.playerView as! PlayerView).setPlayer(self.player!)
             self.player!.currentItem?.addObserver(self, forKeyPath: ObservedValue.PresentationSize, options: NSKeyValueObservingOptions.new, context: nil)
@@ -287,6 +288,7 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         }
         pinAccessoryView()
         player?.pause()
+        removeObservers(player: player)
     }
     
     // MARK: - Private
@@ -299,6 +301,7 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
     
     func removeAccessoryViewTimer() {
         accessoryViewTimer?.invalidate()
+        removeObservers(player: player)
         showAccessoryView(false)
     }
     
@@ -315,6 +318,7 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
     }
     
     func uninstallZoomView() {
+        
         let frame: CGRect = contentView.convert(imageScrollView.zoomImageView!.frame, from: imageScrollView)
         imageScrollView.isHidden = true
         mainImageView.isHidden = false
