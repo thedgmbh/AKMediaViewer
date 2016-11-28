@@ -80,7 +80,7 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
     deinit {
         removeObservers(player: self.player)
         player?.removeObserver(self, forKeyPath: ObservedValue.Status)
-
+        
         mainImageView = nil
         contentView = nil
     }
@@ -96,17 +96,17 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
     override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         removeObservers(player: self.player)
-
+        
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
         UIDevice.current.endGeneratingDeviceOrientationNotifications()
     }
-
+    
     override public func viewDidAppear(_ animated: Bool) {
         NotificationCenter.default.addObserver(self, selector: #selector(AKMediaViewerController.orientationDidChangeNotification(_:)), name: NSNotification.Name.UIDeviceOrientationDidChange, object: nil)
         UIDevice.current.beginGeneratingDeviceOrientationNotifications()
         super.viewDidAppear(animated)
     }
-
+    
     
     func removeObservers(player: AVPlayer?) -> Void {
         if observersAdded {
@@ -184,33 +184,29 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         } else {
             switch (UIDevice.current.orientation)
             {
-                case UIDeviceOrientation.landscapeRight:
-                    if(parent!.interfaceOrientation == UIInterfaceOrientation.portrait) {
-                        transform = CGAffineTransform(rotationAngle: CGFloat(-M_PI_2))
-                    } else {
-                        transform = CGAffineTransform(rotationAngle: CGFloat(M_PI_2))
-                    }
-                    break
-                    
-                case UIDeviceOrientation.landscapeLeft:
-                    if(parent!.interfaceOrientation == UIInterfaceOrientation.portrait) {
-                        transform = CGAffineTransform(rotationAngle: CGFloat(M_PI_2))
-                    } else {
-                        transform = CGAffineTransform(rotationAngle: CGFloat(-M_PI_2))
-                    }
-                    break
-                    
-                case UIDeviceOrientation.portrait:
-                    transform = CGAffineTransform.identity
-                    break
-                    
-                case UIDeviceOrientation.portraitUpsideDown:
-                    transform = CGAffineTransform(rotationAngle: CGFloat(M_PI))
-                    break
-                    
-                case UIDeviceOrientation.faceDown: return
-                case UIDeviceOrientation.faceUp: return
-                case UIDeviceOrientation.unknown: return
+            case UIDeviceOrientation.landscapeRight:
+                if(parent!.interfaceOrientation == UIInterfaceOrientation.portrait) {
+                    transform = CGAffineTransform(rotationAngle: CGFloat(-M_PI_2))
+                } else {
+                    transform = CGAffineTransform(rotationAngle: CGFloat(M_PI_2))
+                }
+                
+            case UIDeviceOrientation.landscapeLeft:
+                if(parent!.interfaceOrientation == UIInterfaceOrientation.portrait) {
+                    transform = CGAffineTransform(rotationAngle: CGFloat(M_PI_2))
+                } else {
+                    transform = CGAffineTransform(rotationAngle: CGFloat(-M_PI_2))
+                }
+                
+            case UIDeviceOrientation.portrait:
+                transform = CGAffineTransform.identity
+                
+            case UIDeviceOrientation.portraitUpsideDown:
+                transform = CGAffineTransform(rotationAngle: CGFloat(M_PI))
+                
+            case UIDeviceOrientation.faceDown: return
+            case UIDeviceOrientation.faceUp: return
+            case UIDeviceOrientation.unknown: return
             }
         }
         
@@ -268,7 +264,7 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         playerView?.isHidden = false
         
         addAccessoryViewTimer()
-
+        
         if player?.status == .readyToPlay {
             playPLayer()
         }
@@ -338,7 +334,7 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         
         UIView.animate(withDuration: 0.5, delay: 0, options: [UIViewAnimationOptions.beginFromCurrentState, UIViewAnimationOptions.allowUserInteraction], animations: { () -> Void in
             self.accessoryView.alpha = (visible ? 1 : 0)
-            }, completion: nil)
+        }, completion: nil)
     }
     
     func accessoryViewsVisible() -> Bool {
@@ -385,6 +381,11 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         return frame
     }
     
+    func playPLayer() -> Void {
+        activityIndicator?.stopAnimating()
+        player?.play()
+    }
+    
     // MARK: - Actions
     
     func handleTap(_ gesture: UITapGestureRecognizer) {
@@ -414,7 +415,7 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
             if (scale == self.imageScrollView.maximumZoomScale) {
                 self.imageScrollView.scrollRectToVisible(frame, animated: false)
             }
-            }, completion: nil)
+        }, completion: nil)
         
     }
     
@@ -434,10 +435,6 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
         updateOrientationAnimated(true)
     }
     
-    func playPLayer() -> Void {
-        activityIndicator?.stopAnimating()
-        player?.play()
-    }
     
     // MARK: - KVO
     
@@ -464,7 +461,7 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
             
         case ObservedValue.PLayerHasEmptyBuffer:
             activityIndicator?.startAnimating()
-
+            
         case ObservedValue.PresentationSize:
             view.setNeedsDisplay()
             
