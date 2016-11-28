@@ -182,7 +182,6 @@
 				TargetAttributes = {
 					DD3ABB0C1D89E48700E7332F = {
 						CreatedOnToolsVersion = 8.0;
-						DevelopmentTeam = 85R85ZNGEX;
 						LastSwiftMigration = 0800;
 						ProvisioningStyle = Automatic;
 					};
@@ -409,7 +408,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 85R85ZNGEX;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = AKMediaViewerExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = br.anykey.AKMediaViewerExample;
@@ -424,7 +423,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 85R85ZNGEX;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = AKMediaViewerExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = br.anykey.AKMediaViewerExample;

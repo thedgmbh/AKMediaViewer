@@ -96,10 +96,6 @@ public class AKMediaViewerController : UIViewController, UIScrollViewDelegate {
     
     
 
-    public override func viewDidDisappear(_ animated: Bool) {
-        removeObservers(player: player)
-    }
-    
     
     public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
