@@ -146,7 +146,7 @@ public class AKMediaViewerController: UIViewController, UIScrollViewDelegate {
     }
 
     override public func beginAppearanceTransition(_ isAppearing: Bool, animated: Bool) {
-        if(!isAppearing) {
+        if !isAppearing {
             accessoryView.alpha = 0
             playerView?.alpha = 0
         }
@@ -154,7 +154,7 @@ public class AKMediaViewerController: UIViewController, UIScrollViewDelegate {
 
     override public func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        if(playerView != nil) {
+        if playerView != nil {
             playerView!.frame = mainImageView.bounds
         }
     }
@@ -167,12 +167,12 @@ public class AKMediaViewerController: UIViewController, UIScrollViewDelegate {
         var frame: CGRect
         var duration: TimeInterval = kDefaultOrientationAnimationDuration
 
-        if (UIDevice.current.orientation == previousOrientation) {
+        if UIDevice.current.orientation == previousOrientation {
             return
         }
 
-        if (UIDeviceOrientationIsLandscape(UIDevice.current.orientation) && UIDeviceOrientationIsLandscape(previousOrientation)) ||
-            (UIDeviceOrientationIsPortrait(UIDevice.current.orientation) && UIDeviceOrientationIsPortrait(previousOrientation)) {
+        if UIDeviceOrientationIsLandscape(UIDevice.current.orientation) && UIDeviceOrientationIsLandscape(previousOrientation) ||
+            UIDeviceOrientationIsPortrait(UIDevice.current.orientation) && UIDeviceOrientationIsPortrait(previousOrientation) {
             duration *= 2
         }
 
@@ -342,11 +342,11 @@ public class AKMediaViewerController: UIViewController, UIScrollViewDelegate {
         let videoFrame: CGRect
         let titleFrame: CGRect
 
-        if(isAccessoryViewPinned()) {
+        if isAccessoryViewPinned() {
             return
         }
 
-        if(self.controlView == nil) {
+        if self.controlView == nil {
             let controlView: AKVideoControlView = AKVideoControlView.videoControlView()
             controlView.translatesAutoresizingMaskIntoConstraints = false
             controlView.scrubbing.player = player

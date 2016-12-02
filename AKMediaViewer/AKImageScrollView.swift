@@ -38,14 +38,14 @@ public class AKImageScrollView: UIScrollView, UIScrollViewDelegate {
         var frameToCenter: CGRect = self.zoomImageView!.frame
 
         // center horizontally
-        if (frameToCenter.size.width < boundsSize.width) {
+        if frameToCenter.size.width < boundsSize.width {
             frameToCenter.origin.x = (boundsSize.width - frameToCenter.size.width) / 2
         } else {
             frameToCenter.origin.x = 0
         }
 
         // center vertically
-        if (frameToCenter.size.height < boundsSize.height) {
+        if frameToCenter.size.height < boundsSize.height {
             frameToCenter.origin.y = (boundsSize.height - frameToCenter.size.height) / 2
         } else {
             frameToCenter.origin.y = 0
@@ -60,13 +60,13 @@ public class AKImageScrollView: UIScrollView, UIScrollViewDelegate {
         set (newFrame) {
             let sizeChanging: Bool = !newFrame.size.equalTo(self.frame.size)
 
-            if (sizeChanging) {
+            if sizeChanging {
                 prepareToResize()
             }
 
             super.frame = newFrame
 
-            if (sizeChanging) {
+            if sizeChanging {
                 recoverFromResizing()
             }
         }
@@ -75,7 +75,7 @@ public class AKImageScrollView: UIScrollView, UIScrollViewDelegate {
     // MARK: - Configure scrollView to display new image
 
     public func displayImage(_ image: UIImage) {
-        if(zoomImageView == nil) {
+        if zoomImageView == nil {
             self.zoomScale = 1.0
 
             // make a new UIImageView for the new image
@@ -112,7 +112,7 @@ public class AKImageScrollView: UIScrollView, UIScrollViewDelegate {
         maxScale = min(maxScale, maxImageScale)
 
         // If the image is smaller than the screen, force it to be zoomed.
-        if (minScale > maxScale) {
+        if minScale > maxScale {
             maxScale = minScale
         }
 
@@ -133,7 +133,7 @@ public class AKImageScrollView: UIScrollView, UIScrollViewDelegate {
 
         // If we're at the minimum zoom scale, preserve that by returning 0, which will be converted to the minimum
         // allowable scale when the scale is restored.
-        if (scaleToRestoreAfterResize <= (self.minimumZoomScale + CGFloat(FLT_EPSILON))) {
+        if scaleToRestoreAfterResize <= (self.minimumZoomScale + CGFloat(FLT_EPSILON)) {
             scaleToRestoreAfterResize = 0
         }
     }

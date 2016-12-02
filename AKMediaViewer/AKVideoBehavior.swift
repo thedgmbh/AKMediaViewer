@@ -18,7 +18,7 @@ public class AKVideoBehavior: NSObject {
         var videoIcon: UIImage? = image
         var imageView: UIImageView?
 
-        if((videoIcon == nil) || image!.size.equalTo(CGSize.zero)) {
+        if (videoIcon == nil) || image!.size.equalTo(CGSize.zero) {
             videoIcon = UIImage(named: "icon_big_play", in: Bundle.AKMediaFrameworkBundle(), compatibleWith: nil)
         }
         imageView = UIImageView.init(image: videoIcon)
