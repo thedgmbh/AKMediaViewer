@@ -121,9 +121,7 @@ public class AKMediaViewerController: UIViewController, UIScrollViewDelegate {
     }
 
     override public var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        get {
-            return UIInterfaceOrientationMask.portrait
-        }
+        return UIInterfaceOrientationMask.portrait
     }
 
     func isParentSupportingInterfaceOrientation(_ toInterfaceOrientation: UIInterfaceOrientation) -> Bool {
@@ -181,14 +179,14 @@ public class AKMediaViewerController: UIViewController, UIScrollViewDelegate {
         } else {
             switch (UIDevice.current.orientation) {
             case UIDeviceOrientation.landscapeRight:
-                if(parent!.interfaceOrientation == UIInterfaceOrientation.portrait) {
+                if parent!.interfaceOrientation == UIInterfaceOrientation.portrait {
                     transform = CGAffineTransform(rotationAngle: CGFloat(-M_PI_2))
                 } else {
                     transform = CGAffineTransform(rotationAngle: CGFloat(M_PI_2))
                 }
 
             case UIDeviceOrientation.landscapeLeft:
-                if(parent!.interfaceOrientation == UIInterfaceOrientation.portrait) {
+                if parent!.interfaceOrientation == UIInterfaceOrientation.portrait {
                     transform = CGAffineTransform(rotationAngle: CGFloat(M_PI_2))
                 } else {
                     transform = CGAffineTransform(rotationAngle: CGFloat(-M_PI_2))
@@ -227,7 +225,7 @@ public class AKMediaViewerController: UIViewController, UIScrollViewDelegate {
         playerView!.isHidden = true
 
         // install loading spinner for remote files
-        if(!url.isFileURL) {
+        if !url.isFileURL {
             self.activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
             self.activityIndicator!.frame = UIScreen.main.bounds
             self.activityIndicator!.hidesWhenStopped = true
@@ -251,7 +249,7 @@ public class AKMediaViewerController: UIViewController, UIScrollViewDelegate {
     }
 
     public func focusDidEndWithZoomEnabled(_ zoomEnabled: Bool) {
-        if(zoomEnabled && (playerView == nil)) {
+        if zoomEnabled && (playerView == nil) {
             installZoomView()
         }
 
@@ -267,7 +265,7 @@ public class AKMediaViewerController: UIViewController, UIScrollViewDelegate {
     }
 
     public func defocusWillStart() {
-        if(playerView == nil) {
+        if playerView == nil {
             uninstallZoomView()
         }
         pinAccessoryView()
@@ -324,7 +322,7 @@ public class AKMediaViewerController: UIViewController, UIScrollViewDelegate {
     }
 
     func showAccessoryView(_ visible: Bool) {
-        if(visible == accessoryViewsVisible()) {
+        if visible == accessoryViewsVisible() {
             return
         }
 
@@ -360,14 +358,14 @@ public class AKMediaViewerController: UIViewController, UIScrollViewDelegate {
         frame.origin.x = self.controlMargin
         titleFrame = self.controlView!.superview!.convert(titleLabel.frame, from: titleLabel.superview)
         frame.origin.y =  titleFrame.origin.y - frame.size.height - self.controlMargin
-        if(videoFrame.size.width > 0) {
+        if videoFrame.size.width > 0 {
             frame.origin.y = min(frame.origin.y, videoFrame.maxY - frame.size.height - self.controlMargin as CGFloat)
         }
         self.controlView!.frame = frame
     }
 
     func buildVideoFrame() -> CGRect {
-        if(self.player!.currentItem!.presentationSize.equalTo(CGSize.zero)) {
+        if self.player!.currentItem!.presentationSize.equalTo(CGSize.zero) {
             return CGRect.zero
         }
 
@@ -385,7 +383,7 @@ public class AKMediaViewerController: UIViewController, UIScrollViewDelegate {
     // MARK: - Actions
 
     func handleTap(_ gesture: UITapGestureRecognizer) {
-        if(imageScrollView.zoomScale == imageScrollView.minimumZoomScale) {
+        if imageScrollView.zoomScale == imageScrollView.minimumZoomScale {
             showAccessoryView(!accessoryViewsVisible())
         }
     }
@@ -396,7 +394,7 @@ public class AKMediaViewerController: UIViewController, UIScrollViewDelegate {
         var contentView: UIView
         var scale: CGFloat
 
-        if(imageScrollView.zoomScale == imageScrollView.minimumZoomScale) {
+        if imageScrollView.zoomScale == imageScrollView.minimumZoomScale {
             scale = imageScrollView.maximumZoomScale
             contentView = imageScrollView.delegate!.viewForZooming!(in: imageScrollView)!
             location = gesture.location(in: contentView)
