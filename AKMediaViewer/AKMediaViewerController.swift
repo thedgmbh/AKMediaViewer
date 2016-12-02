@@ -125,7 +125,7 @@ public class AKMediaViewerController: UIViewController, UIScrollViewDelegate {
     }
 
     func isParentSupportingInterfaceOrientation(_ toInterfaceOrientation: UIInterfaceOrientation) -> Bool {
-        switch(toInterfaceOrientation) {
+        switch toInterfaceOrientation {
         case UIInterfaceOrientation.portrait:
             return parent!.supportedInterfaceOrientations.contains(UIInterfaceOrientationMask.portrait)
 
@@ -177,7 +177,7 @@ public class AKMediaViewerController: UIViewController, UIScrollViewDelegate {
         if(UIDevice.current.orientation == UIDeviceOrientation.portrait) || isParentSupportingInterfaceOrientation(UIApplication.shared.statusBarOrientation) {
             transform = CGAffineTransform.identity
         } else {
-            switch (UIDevice.current.orientation) {
+            switch UIDevice.current.orientation {
             case UIDeviceOrientation.landscapeRight:
                 if parent!.interfaceOrientation == UIInterfaceOrientation.portrait {
                     transform = CGAffineTransform(rotationAngle: CGFloat(-M_PI_2))
@@ -204,7 +204,7 @@ public class AKMediaViewerController: UIViewController, UIScrollViewDelegate {
             }
         }
 
-        if (animated) {
+        if animated {
             frame = contentView.frame
             UIView.animate(withDuration: duration, animations: { () -> Void in
                 self.contentView.transform = transform!
@@ -275,7 +275,7 @@ public class AKMediaViewerController: UIViewController, UIScrollViewDelegate {
     // MARK: - Private
 
     func addAccessoryViewTimer() {
-        if (player != nil) {
+        if player != nil {
             accessoryViewTimer = Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(AKMediaViewerController.removeAccessoryViewTimer), userInfo: nil, repeats: false)
         }
     }
@@ -345,11 +345,12 @@ public class AKMediaViewerController: UIViewController, UIScrollViewDelegate {
         }
 
         if self.controlView == nil {
-            let controlView: AKVideoControlView = AKVideoControlView.videoControlView()
-            controlView.translatesAutoresizingMaskIntoConstraints = false
-            controlView.scrubbing.player = player
-            self.controlView = controlView
-            accessoryView.addSubview(self.controlView!)
+            if let controlView: AKVideoControlView = AKVideoControlView.videoControlView() {
+                controlView.translatesAutoresizingMaskIntoConstraints = false
+                controlView.scrubbing.player = player
+                self.controlView = controlView
+                accessoryView.addSubview(self.controlView!)
+            }
         }
 
         videoFrame = buildVideoFrame()
@@ -406,7 +407,7 @@ public class AKMediaViewerController: UIViewController, UIScrollViewDelegate {
         UIView.animate(withDuration: 0.5, delay: 0, options: UIViewAnimationOptions.beginFromCurrentState, animations: { () -> Void in
             self.imageScrollView.zoomScale = scale
             self.imageScrollView.layoutIfNeeded()
-            if (scale == self.imageScrollView.maximumZoomScale) {
+            if scale == self.imageScrollView.maximumZoomScale {
                 self.imageScrollView.scrollRectToVisible(frame, animated: false)
             }
         }, completion: nil)

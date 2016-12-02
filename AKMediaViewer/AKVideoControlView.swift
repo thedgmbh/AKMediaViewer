@@ -28,9 +28,12 @@ public class AKVideoControlView: UIView {
         scrubbing.player.removeObserver(self, forKeyPath: "rate")
     }
 
-    class func videoControlView() -> AKVideoControlView {
+    class func videoControlView() -> AKVideoControlView? {
         let arrayOfViews = Bundle.AKMediaFrameworkBundle().loadNibNamed("AKVideoControlView", owner: nil, options: nil)
-        return arrayOfViews?.first as! AKVideoControlView
+        guard let videoControlView = arrayOfViews?.first as? AKVideoControlView else {
+            return nil
+        }
+        return videoControlView
     }
 
     // MARK: - IBActions
@@ -48,8 +51,9 @@ public class AKVideoControlView: UIView {
                 scrubbing.player.addObserver(self, forKeyPath: "rate", options: NSKeyValueObservingOptions.new, context: nil)
             }
         } else {
-            let player = object as! AVPlayer
-            playPauseButton.isSelected = (player.rate != 0)
+            if let player = object as? AVPlayer {
+                playPauseButton.isSelected = (player.rate != 0)
+            }
         }
     }
 }
