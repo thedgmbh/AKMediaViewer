@@ -92,7 +92,7 @@ public class AKMediaViewerManager: NSObject, UIGestureRecognizerDelegate {
     // Image used to show a play icon on video thumbnails. Defaults to nil (uses internal image).
     public let playImage: UIImage?
 
-    public var delegate: AKMediaViewerDelegate?
+    public weak var delegate: AKMediaViewerDelegate?
 
     // The media view being focused.
     var mediaView = UIView()
@@ -622,7 +622,7 @@ public class AKMediaViewerManager: NSObject, UIGestureRecognizerDelegate {
 
     // Set minimal customization to default "Done" button. (Text and Color)
     public func setDefaultDoneButtonText(_ text: String, withColor color: UIColor) {
-        (topAccessoryController as! AKMediaFocusBasicToolbarController).doneButton.setTitle(text, for: UIControlState())
-        (topAccessoryController as! AKMediaFocusBasicToolbarController).doneButton.setTitleColor(color, for: UIControlState())
+        (topAccessoryController as? AKMediaFocusBasicToolbarController)?.doneButton.setTitle(text, for: UIControlState())
+        (topAccessoryController as? AKMediaFocusBasicToolbarController)?.doneButton.setTitleColor(color, for: UIControlState())
     }
 }
