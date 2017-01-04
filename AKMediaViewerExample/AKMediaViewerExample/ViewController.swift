@@ -48,7 +48,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         let index: Int = view.tag - 1
         let name: NSString = mediaNames[index] as NSString
         let url = Bundle.main.url(forResource: name.deletingPathExtension, withExtension: name.pathExtension)!
-        
+
         return url
     }
 
