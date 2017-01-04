@@ -11,14 +11,14 @@ import UIKit
 
 let kPlayIconTag: NSInteger = 50001
 
-public class AKVideoBehavior : NSObject {
-    
+public class AKVideoBehavior: NSObject {
+
     public func addVideoIconToView(_ view: UIView, image: UIImage?) {
-        
+
         var videoIcon: UIImage? = image
         var imageView: UIImageView?
-        
-        if((videoIcon == nil) || image!.size.equalTo(CGSize.zero)) {
+
+        if (videoIcon == nil) || image!.size.equalTo(CGSize.zero) {
             videoIcon = UIImage(named: "icon_big_play", in: Bundle.AKMediaFrameworkBundle(), compatibleWith: nil)
         }
         imageView = UIImageView.init(image: videoIcon)
@@ -28,5 +28,5 @@ public class AKVideoBehavior : NSObject {
         imageView!.frame = view.bounds
         view.addSubview(imageView!)
     }
-    
+
 }

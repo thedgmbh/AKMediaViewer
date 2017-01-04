@@ -9,12 +9,12 @@
 import Foundation
 import UIKit
 
-public class AKTransparentView : UIView {
-    
+public class AKTransparentView: UIView {
+
     override public func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         var view: UIView? = super.hitTest(point, with: event)
-        
-        if(view == self) {
+
+        if view == self {
             view = nil
         }
         return view
