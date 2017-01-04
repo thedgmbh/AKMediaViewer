@@ -387,11 +387,7 @@ public class AKMediaViewerController: UIViewController, UIScrollViewDelegate {
         return frame
     }
 
-    func playPLayer() -> Void {
-        activityIndicator?.stopAnimating()
-        player?.play()
-    }
-
+ 
     // MARK: - Actions
 
     func handleTap(_ gesture: UITapGestureRecognizer) {
