@@ -90,7 +90,7 @@ public class AKMediaViewerManager: NSObject, UIGestureRecognizerDelegate {
     public var topAccessoryController: UIViewController?
 
     // Image used to show a play icon on video thumbnails. Defaults to nil (uses internal image).
-    public let playImage: UIImage?
+    public var playImage: UIImage?
 
     public weak var delegate: AKMediaViewerDelegate?
 
