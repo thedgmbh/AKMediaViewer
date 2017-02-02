@@ -332,7 +332,7 @@ public class AKMediaViewerManager: NSObject, UIGestureRecognizerDelegate {
 
     // Start the focus animation on the specified view. The focusing gesture must have been installed on this view.
     public func startFocusingView(_ mediaView: UIView) {
-
+        
         let parentViewController: UIViewController
         let focusViewController: AKMediaViewerController?
         let center: CGPoint
@@ -341,7 +341,7 @@ public class AKMediaViewerManager: NSObject, UIGestureRecognizerDelegate {
         var finalImageFrame: CGRect?
         var untransformedFinalImageFrame: CGRect = CGRect.zero
 
-        focusViewController = focusViewControllerForView(mediaView)!
+        focusViewController = self.focusViewControllerForView(mediaView)!
 
         if focusViewController == nil {
             return
@@ -350,14 +350,14 @@ public class AKMediaViewerManager: NSObject, UIGestureRecognizerDelegate {
         self.focusViewController = focusViewController!
 
         if self.defocusOnVerticalSwipe {
-            installSwipeGestureOnFocusView()
+            self.installSwipeGestureOnFocusView()
         }
 
         // This should be called after swipe gesture is installed to make sure the nav bar doesn't hide before animation begins.
-        delegate?.mediaViewerManagerWillAppear?(self)
+        self.delegate?.mediaViewerManagerWillAppear?(self)
 
         self.mediaView = mediaView
-        parentViewController = (delegate?.parentViewControllerForMediaViewerManager(self))!
+        parentViewController = (self.delegate?.parentViewControllerForMediaViewerManager(self))!
         parentViewController.addChildViewController(focusViewController!)
         parentViewController.view.addSubview(focusViewController!.view)
 
@@ -379,18 +379,18 @@ public class AKMediaViewerManager: NSObject, UIGestureRecognizerDelegate {
         }
 
         if imageView.contentMode == UIViewContentMode.scaleAspectFill {
-            let size: CGSize = sizeThatFitsInSize(finalImageFrame!.size, initialSize: imageView.image!.size)
+            let size: CGSize = self.sizeThatFitsInSize(finalImageFrame!.size, initialSize: imageView.image!.size)
             finalImageFrame!.size = size
             finalImageFrame!.origin.x = (focusViewController!.view.bounds.size.width - size.width) / 2
             finalImageFrame!.origin.y = (focusViewController!.view.bounds.size.height - size.height) / 2
         }
 
-        UIView .animate(withDuration: self.animationDuration) { () -> Void in
+        UIView .animate(withDuration: 0.1) { () -> Void in
             focusViewController!.view.backgroundColor = self.backgroundColor
             focusViewController?.beginAppearanceTransition(true, animated: true)
         }
 
-        duration = (elasticAnimation ? animationDuration * (1.0 - kAnimateElasticDurationRatio) : self.animationDuration)
+        duration = (self.elasticAnimation ? self.animationDuration * (1.0 - kAnimateElasticDurationRatio) : self.animationDuration)
 
         UIView.animate(withDuration: self.animationDuration,
             animations: { () -> Void in
@@ -410,7 +410,6 @@ public class AKMediaViewerManager: NSObject, UIGestureRecognizerDelegate {
                 imageView.transform = CGAffineTransform.identity
                 initialFrame = imageView.frame
                 imageView.frame = frame
-                focusViewController!.updateOrientationAnimated(false)
                 // This is the final image frame. No transform.
                 untransformedFinalImageFrame = imageView.frame
                 frame =  self.elasticAnimation ? self.rectInsetsForRect(untransformedFinalImageFrame, withRatio: -kAnimateElasticSizeRatio) : untransformedFinalImageFrame
@@ -421,9 +420,6 @@ public class AKMediaViewerManager: NSObject, UIGestureRecognizerDelegate {
                 imageView.transform = CGAffineTransform.identity
                 imageView.frame = frame
 
-                if mediaView.layer.cornerRadius > 0 {
-                    self.animateCornerRadiusOfView(imageView, withDuration: duration, from: Float(mediaView.layer.cornerRadius), to: 0.0)
-                }
             }, completion: { (finished: Bool) -> Void in
                 UIView.animate(withDuration: self.elasticAnimation ? self.animationDuration * (kAnimateElasticDurationRatio / 3.0) : 0.0,
                     animations: { () -> Void in
@@ -446,6 +442,7 @@ public class AKMediaViewerManager: NSObject, UIGestureRecognizerDelegate {
                                         self.delegate?.mediaViewerManagerDidAppear?(self)
                                 })
                         })
+                        print("Last Block Finish")
                 })
         })
     }
