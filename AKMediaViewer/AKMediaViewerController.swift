@@ -260,7 +260,7 @@ public class AKMediaViewerController: UIViewController, UIScrollViewDelegate {
             self.player!.currentItem?.addObserver(self, forKeyPath: ObservedValue.PLayerKeepUp, options: NSKeyValueObservingOptions.new, context: nil)
             self.observersAdded = true
             self.player!.addObserver(self, forKeyPath: ObservedValue.Status, options: .initial, context: nil)
-            self.delay(0.5, completion: {
+            delay(0.5, completion: {
                 self.layoutControlView()
             })
         })
