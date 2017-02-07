@@ -13,6 +13,12 @@ import UIKit
 let kDefaultOrientationAnimationDuration: TimeInterval = 0.4
 let kDefaultControlMargin: CGFloat = 5
 
+func delay(_ seconds: Double, completion: @escaping () -> ()) {
+    DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
+        completion()
+    }
+}
+
 // MARK: - PlayerView
 
 public class PlayerView: UIView {
@@ -254,7 +260,9 @@ public class AKMediaViewerController: UIViewController, UIScrollViewDelegate {
             self.player!.currentItem?.addObserver(self, forKeyPath: ObservedValue.PLayerKeepUp, options: NSKeyValueObservingOptions.new, context: nil)
             self.observersAdded = true
             self.player!.addObserver(self, forKeyPath: ObservedValue.Status, options: .initial, context: nil)
-            self.layoutControlView()
+            self.delay(0.5, completion: {
+                self.layoutControlView()
+            })
         })
     }
 
@@ -354,7 +362,6 @@ public class AKMediaViewerController: UIViewController, UIScrollViewDelegate {
         if isAccessoryViewPinned() {
             return
         }
-
         if self.controlView == nil {
             if let controlView: AKVideoControlView = AKVideoControlView.videoControlView() {
                 controlView.translatesAutoresizingMaskIntoConstraints = false
@@ -363,7 +370,7 @@ public class AKMediaViewerController: UIViewController, UIScrollViewDelegate {
                 accessoryView.addSubview(self.controlView!)
             }
         }
-
+        
         videoFrame = buildVideoFrame()
         frame = self.controlView!.frame
         frame.size.width = self.view.bounds.size.width - self.controlMargin * 2
@@ -377,6 +384,7 @@ public class AKMediaViewerController: UIViewController, UIScrollViewDelegate {
     }
 
     func buildVideoFrame() -> CGRect {
+        return CGRect.zero
         if self.player!.currentItem!.presentationSize.equalTo(CGSize.zero) {
             return CGRect.zero
         }

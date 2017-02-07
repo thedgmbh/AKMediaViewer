@@ -442,7 +442,6 @@ public class AKMediaViewerManager: NSObject, UIGestureRecognizerDelegate {
                                         self.delegate?.mediaViewerManagerDidAppear?(self)
                                 })
                         })
-                        print("Last Block Finish")
                 })
         })
     }
